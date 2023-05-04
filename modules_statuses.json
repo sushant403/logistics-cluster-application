@@ -1,0 +1,12 @@
+{
+    "Users": true,
+    "Acl": false,
+    "Blog": false,
+    "Localization": true,
+    "Menu": false,
+    "Widget": false,
+    "Pages": false,
+    "Cargo": true,
+    "Payments": true,
+    "Currency": true
+}
