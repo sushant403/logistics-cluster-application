@@ -28,3 +28,6 @@ storage/framework/cache/data/
 /Modules/Widget/Resources/views/admin
 .env
 /temp
+
+/lk
+/*zip
