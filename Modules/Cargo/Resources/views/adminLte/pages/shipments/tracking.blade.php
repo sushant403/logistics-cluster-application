@@ -341,7 +341,7 @@
 
                                     <div class="col-md-4">
                                         <div class="trackstatus-title">
-                                            <a class="btn btn-secondary btn-sm" target="blank" href="{{route('tracking.print', $model->id )}}"><i style="color:white" class="ti-printer"></i>&nbsp;طباعة الشحن</a>
+                                            <a class="btn btn-secondary btn-sm" target="blank" href="{{route('tracking.print', $model->id )}}"><i style="color:white" class="ti-printer"></i>&nbsp;Print</a>
                                         </div>
                                     </div>
                                 </div>
@@ -351,20 +351,20 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="track-title">
-                                                <h5 class="form_sub" style="background-color: #ff700a; border-radius: 3px; color:white">المرسل</h5>
+                                                <h5 class="form_sub" style="background-color: #ff700a; border-radius: 3px; color:white">Sender</h5>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="track-title">
-                                                <span class="ti-location-pin align-top"style="font-size: 30px;"></span> <label>جمع المدينة<br>
+                                                <span class="ti-location-pin align-top"style="font-size: 30px;"></span> <label>Country<br>
                                                     <b>@if(isset($model->from_country)){{$model->from_country->name}} @endif</b></label>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="track-title">
-                                                <span class="ti-location-pin align-top"style="font-size: 30px;"></span> <label>مدينة المنشأ<br>   
+                                                <span class="ti-location-pin align-top"style="font-size: 30px;"></span> <label>State<br>   
                                                     <b>@if(isset($model->from_state)){{$model->from_state->name}} @endif </b></label>
                                             </div>
                                         </div>
@@ -372,14 +372,14 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="track-title">
-                                                <span class="ti-calendar align-top"style="font-size: 30px;"></span> <label>تاريخ الشحن<br>
+                                                <span class="ti-calendar align-top"style="font-size: 30px;"></span> <label>Date<br>
                                                     <b>{{$model->shipping_date}}</b></label>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <div class="track-title">
-                                                    <span class="ti-timer align-top"style="font-size: 30px;"></span> <label>وقت الشحن<br>
+                                                    <span class="ti-timer align-top"style="font-size: 30px;"></span> <label>Delivery Type<br>
                                                         <b>{{ $model->deliveryTime ? json_decode($model->deliveryTime->name, true)[app()->getLocale()] : ''}}</b></label>
                                                 </div>
                                             </div>
@@ -388,13 +388,13 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="track-title">
-                                                <label>اسم جهة الاتصال<br> <b>{{ $client->name }}</b></label>
+                                                <label>Name<br> <b>{{ $client->name }}</b></label>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <div class="track-title">
-                                                    <span class="ti-direction-alt align-top" style="font-size: 30px;"></span> <label>عنوان  الاتصال<br> <b>{{$ClientAddress->address}}</b></label>
+                                                    <span class="ti-direction-alt align-top" style="font-size: 30px;"></span> <label>Address<br> <b>{{$ClientAddress->address}}</b></label>
                                                 </div>
                                             </div>
                                         </div>
@@ -403,7 +403,7 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="track-title">
-                                                <label>كمية الشحن<br> <b>{{$package->qty}}</b></label>
+                                                <label>No. of Packages<br> <b>{{$package->qty}}</b></label>
                                             </div>
                                         </div>
                                      
@@ -438,20 +438,20 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="track-title">
-                                                <h5 class="form_sub"  style="background-color: #ff700a; border-radius: 3px; color:white"> المستلم </h5>
+                                                <h5 class="form_sub"  style="background-color: #ff700a; border-radius: 3px; color:white"> Receiver </h5>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="track-title">
-                                                <span class="ti-location-pin align-top" style="font-size: 30px;"></span> <label>مدينة التوصيل<br>
+                                                <span class="ti-location-pin align-top" style="font-size: 30px;"></span> <label>To Country<br>
                                                     <b>@if(isset($model->to_country)){{$model->to_country->name}} @endif</b></label>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="track-title">
-                                                <span class="ti-location-pin align-top" style="font-size: 30px;"></span> <label>مدينة الوجهة<br>
+                                                <span class="ti-location-pin align-top" style="font-size: 30px;"></span> <label>To State<br>
                                                     <b>@if(isset($model->to_state)){{$model->to_state->name}} @endif</b></label>
                                             </div>
                                         </div>
@@ -460,7 +460,7 @@
                                         <div class="col-md-6">
                                             <div class="track-title">
                                                 <span class="ti-calendar align-top"
-                                                    style="font-size: 30px;"></span> <label>وقت الشحن<br>
+                                                    style="font-size: 30px;"></span> <label>Delivery Type<br>
                                                     <b>{{ $model->deliveryTime ? json_decode($model->deliveryTime->name, true)[app()->getLocale()] : ''}}</b>
                                                 </label>
                                             </div>
@@ -469,7 +469,7 @@
                                             <div class="form-group">
                                                 <div class="track-title">
                                                     <span class="ti-timer align-top"
-                                                        style="font-size: 30px;"></span> <label>تاريخ التسليم  المقدّر<br> <b>{{$model->collection_time}}</b></label>
+                                                        style="font-size: 30px;"></span> <label>Collection Time<br> <b>{{$model->collection_time}}</b></label>
                                                 </div>
                                             </div>
                                         </div>
@@ -484,7 +484,7 @@
                                             <div class="form-group">
                                                 <div class="track-title">
                                                     <span class="ti-direction-alt align-top"
-                                                        style="font-size: 30px;"></span> <label>عنوان الاتصال<br> <b>{{$model->reciver_address}}</b></label>
+                                                        style="font-size: 30px;"></span> <label>Receiver Address<br> <b>{{$model->reciver_address}}</b></label>
                                                 </div>
                                             </div>
                                         </div>
@@ -498,7 +498,7 @@
                             <br><br><br><br><br><br><br>
                             <div class="booking-summary_block">
                                 <div class="booking-summary-box">
-                                    <h5>سجل الشحن</h5>
+                                    <h5>Shipment Timeline</h5>
                                     <div class="track-cost">
                                         <ul class="timeline a">
                                             <li class="event">
