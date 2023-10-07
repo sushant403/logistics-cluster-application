@@ -72,7 +72,7 @@ class StaffsDataTable extends DataTable
     public function query(Staff $model, Request $request)
     {
         $query = $model->getStaff($model)->newQuery();
-        
+
         // class filter for user only
         $staff_filter = new StaffFilter($query, $request);
 
@@ -89,6 +89,8 @@ class StaffsDataTable extends DataTable
     public function html()
     {
         $lang = \LaravelLocalization::getCurrentLocale();
+        $lang = get_locale_name_by_code($lang, $lang);
+
         return $this->builder()
             ->setTableId($this->table_id)
             ->columns($this->getColumns())

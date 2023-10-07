@@ -78,7 +78,7 @@ class LanguagesDataTable extends DataTable
     public function query(Language $model, Request $request)
     {
         $query = $model->with('creator')->newQuery();
-        
+
         // class filter for language only
         $language_filter = new LanguageFilter($query, $request);
 
@@ -95,6 +95,8 @@ class LanguagesDataTable extends DataTable
     public function html()
     {
         $lang = \LaravelLocalization::getCurrentLocale();
+        $lang = get_locale_name_by_code($lang, $lang);
+
         return $this->builder()
             ->setTableId($this->table_id)
             ->columns($this->getColumns())

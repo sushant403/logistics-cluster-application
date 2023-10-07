@@ -82,7 +82,7 @@ class PostsDataTable extends DataTable
     public function query(Post $model, Request $request)
     {
         $query = $model->with('creator')->withCount('comments')->newQuery();
-        
+
         // class filter for post only
         $post_filter = new PostFilter($query, $request);
 
@@ -99,6 +99,8 @@ class PostsDataTable extends DataTable
     public function html()
     {
         $lang = \LaravelLocalization::getCurrentLocale();
+        $lang = get_locale_name_by_code($lang, $lang);
+
         return $this->builder()
             ->setTableId($this->table_id)
             ->columns($this->getColumns())

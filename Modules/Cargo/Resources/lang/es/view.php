@@ -716,5 +716,10 @@ return [
     'out_for_delivery' => 'Fuera para entrega',
     'delivered' => 'Entregada',
     'returned_to_merchant' => 'Devuelto al comerciante',
-
+    'send_app'=>'Send App',
+    'support_codecanuon_1' => 'You Can Get Support Through CodeCanyon By ',
+    'support_codecanuon_2' => 'If You Have Purchased 6 Months Of Support as a Customer  You Can Submit Support Ticket Or Simply Upgrade Your Support By Purchasing Another 6 Months, So That You Can Enjoy Instant Answers and Solutions.',
+    'click_here' => 'Click Here',
+    'send_email_support_1' => 'If You Have Any Questions, Please Do Not Hesitate To Contact Us Via Email At',
+    'send_email_support_2' => 'and We Will Be Happy To Assist You. Please Note That We May Have Response Times Of Up To Two Business Days',
 ];

@@ -15,21 +15,21 @@ use Modules\Acl\Repositories\AclRepository;
 class CountryController extends Controller
 {
     private $aclRepo;
-    
+
     public function __construct(AclRepository $aclRepository)
     {
         $this->aclRepo = $aclRepository;
         // check on permissions
         $this->middleware('user_role:1|0')->only('index', 'store', 'covered_states', 'post_covered_states', 'countries_config_costs', 'ajax_countries_costs_repeter', 'post_countries_config_costs');
     }
-        
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-    {     
+    {
         breadcrumb([
             [
                 'name' => __('cargo::view.dashboard'),
@@ -39,9 +39,15 @@ class CountryController extends Controller
                 'name' => __('cargo::view.covered_places'),
             ]
         ]);
+
         $items  = Country::all();
         $form_title = __('cargo::view.all_countries');
-        $adminTheme = env('ADMIN_THEME', 'adminLte');return view('cargo::'.$adminTheme.'.pages.countries.index', compact('items', 'form_title'));
+        $adminTheme = env('ADMIN_THEME', 'adminLte');
+
+        return view(
+            'cargo::'.$adminTheme.'.pages.countries.index',
+            compact('items', 'form_title')
+        );
     }
 
     public function store(Request $request)
@@ -119,7 +125,7 @@ class CountryController extends Controller
         $to = Country::find($data['to_country']);
         $from_cities = State::where('country_id', $from->id)->where('covered', 1)->get();
         $to_cities = State::where('country_id', $to->id)->where('covered', 1)->get();
-        
+
         if(isset($data['from_region']) && isset($data['to_region'])){
             $from_region = State::where('country_id', $from->id)->where('id', $data['from_region'])->first();
             $to_region = State::where('country_id', $from->id)->where('id', $data['to_region'])->first();;
@@ -129,14 +135,14 @@ class CountryController extends Controller
             $region_cost = Cost::where('from_country_id', $from->id)->where('to_country_id', $to->id)->where('from_state_id', $from_region->id)->where('to_state_id', $to_region->id)->where('from_area_id', 0)->where('to_area_id', 0)->first();
             if(!isset($region_cost))
             {
-                
+
                 $region_cost = new Cost();
                 $region_cost->from_country_id = $from->id;
                 $region_cost->to_country_id = $to->id;
                 $region_cost->from_state_id = $from_region->id;
                 $region_cost->to_state_id = $to_region->id;
                 $region_cost->save();
-                
+
             }
             $area_costs = Cost::where('from_country_id', $from->id)->where('to_country_id', $to->id)->where('from_state_id', $from_region->id)->where('to_state_id', $to_region->id)->whereIn('from_area_id', $from_areas->pluck('id')->toArray())->whereIn('to_area_id',$to_areas->pluck('id')->toArray())->get();
             $adminTheme = env('ADMIN_THEME', 'adminLte');return view('cargo::'.$adminTheme.'.pages.countries.costs-repeter', compact('from', 'to', 'from_cities', 'to_cities','from_region','to_region','from_areas','to_areas','region_cost','area_costs'));
@@ -192,7 +198,7 @@ class CountryController extends Controller
 
     public function post_countries_config_costs(Request $request)
     {
-        
+
         $counter = 0;
         $from_country = $request->from_country_h[$counter];
         $to_country = $request->to_country_h[$counter];
@@ -203,7 +209,7 @@ class CountryController extends Controller
         $insurance = $request->insurance[$counter];
         $newCost = Cost::where('from_country_id', $from_country)->where('to_country_id', $to_country)->first();
         $areaNewCost = Cost::where('from_country_id', $from_country)->where('to_country_id', $to_country)->where('from_state_id', $from_state)->where('to_state_id', $to_state)->where('from_area_id', 99)->where('to_area_id', 93)->first();
-        
+
         if(!isset($newCost))
         {
             $newCost = new Cost();
@@ -229,8 +235,8 @@ class CountryController extends Controller
         $newCost->tax = $tax;
         $newCost->insurance = $insurance;
         $newCost->save();
-        
-        // START FROM STATE 
+
+        // START FROM STATE
         foreach ($request->from_state as $key => $state){
             $newCost = Cost::where('from_country_id', $from_country)->where('to_country_id', $to_country)->where('from_state_id', $state)->where('to_state_id', $request->to_state[$key])->where('from_area_id', 0)->where('to_area_id', 0)->first();
             if(!isset($newCost))
@@ -265,7 +271,7 @@ class CountryController extends Controller
             $newCost->save();
         }
         // START FROM AREAS
-        $counter = 1 ; 
+        $counter = 1 ;
         foreach ($request->from_area as $key => $cost_data) {
             if ($counter <= (count($request->from_area) )) {
 
@@ -391,7 +397,7 @@ class CountryController extends Controller
     }
 
     public function updateStatus(Request $request){
-        
+
         $country = Country::findOrFail($request->id);
         $country->status = $request->status;
         if($country->save()){

@@ -102,6 +102,8 @@ class UsersDataTable extends DataTable
     public function html()
     {
         $lang = \LaravelLocalization::getCurrentLocale();
+        $lang = get_locale_name_by_code($lang, $lang);
+
         return $this->builder()
             ->setTableId($this->table_id)
             ->columns($this->getColumns())
@@ -163,12 +165,13 @@ class UsersDataTable extends DataTable
     /**
      * Transformer buttons export.
      *
-     * @return string
+     * @return array
      */
     protected function buttonsExport()
     {
         $btns = [];
-        foreach($this->btn_exports as $btn) {
+
+        foreach ($this->btn_exports as $btn) {
             $btns[] = [
                 'extend' => $btn,
                 'exportOptions' => [
@@ -176,6 +179,7 @@ class UsersDataTable extends DataTable
                 ]
             ];
         }
+
         return $btns;
     }
 }

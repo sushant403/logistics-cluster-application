@@ -45,9 +45,9 @@
                         <div class="d-flex flex-column flex-root">
                             <span class="mb-4 text-dark font-weight-bold">{{ __('cargo::view.client_sender') }}</span>
                             @if($user_role == $admin || auth()->user()->can('show-clients') )
-                                <a class="text-danger font-weight-boldest font-size-lg" href="{{route('clients.show',$shipment->client_id)}}">{{$shipment->client->name}}</a>
+                                <a class="text-danger font-weight-boldest font-size-lg" href="{{route('clients.show',$shipment->client_id)}}">{{$shipment->client->name ?? 'Null'}}</a>
                             @else
-                                <span class="text-danger font-weight-boldest font-size-lg">{{$shipment->client->name}}</span>
+                                <span class="text-danger font-weight-boldest font-size-lg">{{$shipment->client->name ?? 'Null'}}</span>
                             @endif
                             <span class="text-muted font-size-md">{{$shipment->client_phone}}</span>
                             <span class="text-muted font-size-md">{{$shipment->from_address ? $shipment->from_address->address : ''}}</span>
@@ -79,9 +79,9 @@
                         <div class="d-flex flex-column flex-root">
                             <span class="mb-2 font-weight-bolder">{{ __('cargo::view.current_branch') }}</span>
                             @if($user_role == $admin || auth()->user()->can('show-branches') )
-                                <a class="opacity-70" href="{{route('branches.show',$shipment->branch_id)}}">{{$shipment->branch->name}}</a>
+                                <a class="opacity-70" href="{{route('branches.show',$shipment->branch_id)}}">{{$shipment->branch->name ?? 'Null'}}</a>
                             @else
-                                <span class="text-danger font-weight-boldest font-size-lg">{{$shipment->branch->name}}</span>
+                                <span class="text-danger font-weight-boldest font-size-lg">{{$shipment->branch->name ?? 'Null'}}</span>
                             @endif
                         </div>
                         <div class="d-flex flex-column flex-root">
@@ -105,7 +105,7 @@
                         @if ($shipment->prev_branch)
                             <div class="d-flex flex-column flex-root">
                                 <span class="mb-2 font-weight-bolder">{{ __('cargo::view.previous_branch') }}</span>
-                                <span class="opacity-70">{{Modules\Cargo\Entities\Branch::find($shipment->prev_branch)->name}}</span>
+                                <span class="opacity-70">{{Modules\Cargo\Entities\Branch::find($shipment->prev_branch)->name ?? 'Null'}}</span>
                             </div>
                         @endif
                         <div class="d-flex flex-column flex-root">
@@ -133,19 +133,19 @@
                     <div class="pt-6 d-flex justify-content-between">
                         <div class="d-flex flex-column flex-root">
                                 <span class="mb-4 text-dark font-weight-bold">{{ __('cargo::view.from_country') }}</span>
-                                <span class="text-muted font-weight-bolder font-size-lg">@if(isset($shipment->from_country)){{$shipment->from_country->name}} @endif </span>
+                                <span class="text-muted font-weight-bolder font-size-lg">@if(isset($shipment->from_country)){{$shipment->from_country->name ?? 'Null'}} @endif </span>
                         </div>
                         <div class="d-flex flex-column flex-root">
                                 <span class="mb-4 text-dark font-weight-bold">{{ __('cargo::view.to_country') }}</span>
-                                <span class="text-muted font-weight-bolder font-size-lg">@if(isset($shipment->to_country)){{$shipment->to_country->name}} @endif </span>
+                                <span class="text-muted font-weight-bolder font-size-lg">@if(isset($shipment->to_country)){{$shipment->to_country->name ?? 'Null'}} @endif </span>
                         </div>
                         <div class="d-flex flex-column flex-root">
                                 <span class="mb-4 text-dark font-weight-bold">{{ __('cargo::view.from_region') }}</span>
-                                <span class="text-muted font-weight-bolder font-size-lg">@if(isset($shipment->from_state)){{$shipment->from_state->name}} @endif </span>
+                                <span class="text-muted font-weight-bolder font-size-lg">@if(isset($shipment->from_state)){{$shipment->from_state->name ?? 'Null'}} @endif </span>
                         </div>
                         <div class="d-flex flex-column flex-root">
                                 <span class="mb-4 text-dark font-weight-bold">{{ __('cargo::view.to_region') }}</span>
-                                <span class="text-muted font-weight-bolder font-size-lg">@if(isset($shipment->to_state)){{$shipment->to_state->name}} @endif </span>
+                                <span class="text-muted font-weight-bolder font-size-lg">@if(isset($shipment->to_state)){{$shipment->to_state->name ?? 'Null'}} @endif </span>
                         </div>
 
                         @if(isset($shipment->from_area))
@@ -179,9 +179,9 @@
                             <div class="d-flex flex-column flex-root">
                                 <span class="mb-4 text-dark font-weight-bold">{{ __('cargo::view.driver') }}</span>
                                 @if($user_role == $admin || auth()->user()->can('show-drivers'))
-                                    <a class="text-danger font-weight-boldest font-size-lg" href="{{route('drivers.show',$shipment->captain_id)}}">{{$shipment->captain->name}} </a>
+                                    <a class="text-danger font-weight-boldest font-size-lg" href="{{route('drivers.show',$shipment->captain_id)}}">{{$shipment->captain->name ?? 'Null'}} </a>
                                 @else
-                                    <span class="text-muted font-weight-boldest font-size-lg">{{$shipment->captain->name}}</span>
+                                    <span class="text-muted font-weight-boldest font-size-lg">{{$shipment->captain->name ?? 'Null'}}</span>
                                 @endif
 
                             </div>

@@ -654,7 +654,7 @@
                                             <div class="chbs-form-field col-md-6">
                                                 <label>{{ __('cargo::view.phone_number') }}</label>
                                                 <input id="phone" type="tel" autocomplete="off" name="Shipment[client_phone]" placeholder="{{ __('cargo::view.phone_number') }}"  dir="ltr" autocomplete="off" required  class=" phone_input number-only  "/>
-                                                <input type="hidden" class="country_code" name="country_code_2" value="{{ old('country_code_2', isset($model) ? $model->country_code_2 : '+1') }}" data-reflection="phone">
+                                                <input type="hidden" class="country_code" name="country_code_2" value="" data-reflection="phone">
                                             </div>
                                             <div class="chbs-form-field col-md-6">
                                                 <label>{{ __('cargo::view.table.owner_national_id') }}</label>
@@ -915,7 +915,7 @@
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.slim.min.js" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="{{ asset('themes/html/assets/js/jquery.slim.min.js') }}"  ></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.js"></script>

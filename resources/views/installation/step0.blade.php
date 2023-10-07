@@ -11,7 +11,7 @@
         <a class="steps last"><span class="current-info audible"></span><span class="number">7.</span> </a>
         <section>
             <div class="form-row">
-                <div class="tooltip"> You will need to know the following items before proceeding. </div>
+                <div class="tooltip"> You will need to prepare the following information before proceeding. </div>
 
                 <ol class="list-group">
                     <li class="list-group-item text-semibold"><i class="la la-check"></i> Codecanyon purchase code</li>
@@ -20,14 +20,16 @@
                     <li class="list-group-item text-semibold"><i class="la la-check"></i> Database Password</li>
                     <li class="list-group-item text-semibold"><i class="la la-check"></i> Database Hostname</li>
                 </ol>
+
                 <div class="tooltip">
                     During the installation process, we will check if the files that are needed to be written (<strong>.env file</strong>) have <strong>write permission</strong>. We will also check if <strong>curl</strong> are enabled on your server or not.
                 </div>
+
                 <div class="tooltip">
                     Gather the information mentioned above before hitting the start installation button. If you are ready....
                 </div>
             </div>
-            
+
             <div class="actions">
                 <ul>
                     <li><a href="#" class="disabled">Previous</a></li>

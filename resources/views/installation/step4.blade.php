@@ -21,7 +21,7 @@
             
             <div id="loader" style="margin-top: 20px; display: none;">
                 
-                Please waite, we are importing database&nbsp;&nbsp;<img loading="lazy"  src="{{ asset('assets/installation/images/loader.gif') }}" alt="" width="20">
+                Please wait, we are importing database&nbsp;&nbsp;<img loading="lazy"  src="{{ asset('assets/installation/images/loader.gif') }}" alt="" width="20">
             </div>
             
             <div class="actions">

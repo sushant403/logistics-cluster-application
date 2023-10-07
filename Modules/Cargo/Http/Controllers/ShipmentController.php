@@ -2,47 +2,48 @@
 
 namespace Modules\Cargo\Http\Controllers;
 
-use Auth;
-use App\Models\User;
-use Illuminate\Http\Request;
-use app\Http\Helpers\ApiHelper;
-use Modules\Cargo\Entities\Area;
-use Modules\Cargo\Entities\Cost;
-use Modules\Cargo\Entities\State;
-use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\DB;
-use Modules\Cargo\Entities\Branch;
-use Modules\Cargo\Entities\Client;
-use Modules\Cargo\Entities\Country;
-use Modules\Cargo\Entities\Mission;
-use Modules\Cargo\Entities\Package;
-use Modules\Cargo\Entities\Shipment;
-use Modules\Cargo\Events\AddShipment;
-use Modules\Cargo\Utility\CSVUtility;
-use Modules\Cargo\Events\CreateMission;
-use Modules\Cargo\Events\UpdateMission;
-use Modules\Cargo\Entities\DeliveryTime;
-use Modules\Cargo\Events\ShipmentAction;
-use Modules\Cargo\Events\UpdateShipment;
-use Modules\Cargo\Entities\ClientAddress;
-use Modules\Cargo\Entities\ClientPackage;
-use Modules\Cargo\Entities\ShipmentReason;
-use Modules\Acl\Repositories\AclRepository;
-use Modules\Cargo\Entities\BusinessSetting;
-use Modules\Cargo\Entities\PackageShipment;
-use Modules\Cargo\Entities\ShipmentMission;
-use Modules\Cargo\Entities\ShipmentSetting;
-use Modules\Cargo\Http\Helpers\MissionPRNG;
 use Illuminate\Contracts\Support\Renderable;
-use Modules\Cargo\Http\Helpers\ShipmentPRNG;
-use Modules\Cargo\Http\Requests\RegisterRequest;
-use Modules\Cargo\Http\Requests\ShipmentRequest;
-use Modules\Cargo\Http\Helpers\TransactionHelper;
-use Modules\Cargo\Http\Helpers\StatusManagerHelper;
-use Modules\Cargo\Http\Controllers\ClientController;
-use Modules\Cargo\Http\Helpers\ShipmentActionHelper;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Modules\Cargo\Http\DataTables\ShipmentsDataTable;
+use Modules\Cargo\Http\Requests\ShipmentRequest;
+use Modules\Cargo\Entities\Shipment;
+use Modules\Cargo\Entities\ShipmentSetting;
+use Modules\Cargo\Entities\ClientPackage;
+use Modules\Cargo\Entities\Client;
+use Modules\Cargo\Entities\Package;
+use Modules\Cargo\Entities\Cost;
+use Modules\Cargo\Http\Helpers\ShipmentPRNG;
+use Modules\Cargo\Http\Helpers\MissionPRNG;
+use Modules\Cargo\Entities\PackageShipment;
+use Modules\Cargo\Http\Helpers\ShipmentActionHelper;
+use Modules\Cargo\Http\Helpers\StatusManagerHelper;
+use Modules\Cargo\Http\Helpers\TransactionHelper;
+use Modules\Cargo\Entities\Mission;
+use Modules\Cargo\Entities\ShipmentMission;
+use Modules\Cargo\Entities\ShipmentReason;
+use Modules\Cargo\Entities\Country;
+use Modules\Cargo\Entities\State;
+use Modules\Cargo\Entities\Area;
+use Modules\Cargo\Entities\ClientAddress;
+use Modules\Cargo\Entities\DeliveryTime;
+use Modules\Cargo\Entities\Branch;
+use Modules\Cargo\Entities\BusinessSetting;
+use Modules\Cargo\Utility\CSVUtility;
+use DB;
 use Modules\Cargo\Http\Helpers\UserRegistrationHelper;
+use app\Http\Helpers\ApiHelper;
+use App\Models\User;
+use Modules\Cargo\Events\AddShipment;
+use Modules\Cargo\Events\CreateMission;
+use Modules\Cargo\Events\ShipmentAction;
+use Modules\Cargo\Events\UpdateMission;
+use Modules\Cargo\Events\UpdateShipment;
+use Modules\Acl\Repositories\AclRepository;
+use Modules\Cargo\Http\Controllers\ClientController;
+use Modules\Cargo\Http\Requests\RegisterRequest;
+use Auth;
+use Carbon\Carbon;
 
 class ShipmentController extends Controller
 {
@@ -140,9 +141,23 @@ class ShipmentController extends Controller
             'Shipment.order_id'          => $order_id_validation,
             'Shipment.attachments_before_shipping' => 'nullable',
             'Shipment.amount_to_be_collected'      => 'required',
-            'Shipment.delivery_time'    => 'nullable',
+            // 'Shipment.delivery_time'    => 'nullable',
             'Shipment.total_weight'     => 'required',
         ]);
+
+        // Calculating "delivery time"  for The shipment is automatic
+            $shippingDate = $request->Shipment['collection_time'];
+            $collectionTime = $request->Shipment['shipping_date'];
+
+            $shippingDate = date("H:i:s", strtotime($shippingDate));
+            $collectionTime = $collectionTime;    
+            $shippingDateTime = Carbon::parse($shippingDate . ' ' . $collectionTime);
+            $currentDateTime = Carbon::now();
+
+            $deliveryTime = $currentDateTime->diffForHumans($shippingDateTime, true);
+
+            $request->merge(['Shipment' => array_merge($request->Shipment, ['delivery_time' => $deliveryTime])]);
+
         try {
             DB::beginTransaction();
                 $model = $this->storeShipment($request);
@@ -219,12 +234,12 @@ class ShipmentController extends Controller
                         return 'Invalid Payment Type';
                     }
 
-                    if(isset($request->Shipment['delivery_time'])){
-                        $delivery_time = DeliveryTime::where('id', $request->Shipment['delivery_time'] )->first();
-                        if(!$delivery_time){
-                            return 'Invalid Delivery Time';
-                        }
-                    }
+                    // if(isset($request->Shipment['delivery_time'])){
+                    //     $delivery_time = DeliveryTime::where('id', $request->Shipment['delivery_time'] )->first();
+                    //     if(!$delivery_time){
+                    //         return 'Invalid Delivery Time';
+                    //     }
+                    // }
 
                 }
 
@@ -1353,6 +1368,18 @@ class ShipmentController extends Controller
             $adminTheme = env('ADMIN_THEME', 'adminLte');return view('cargo::'.$adminTheme.'.pages.shipments.print-invoice', compact('shipment'));
         }
     }
+    
+    public function printTracking($shipment)
+    {
+  
+        $shipment = Shipment::find($shipment);
+        $client = Client::where('id', $shipment->client_id)->first();    
+        $PackageShipment = PackageShipment::where('shipment_id',$shipment->id)->get();
+        $ClientAddress = ClientAddress::where('client_id',$shipment->client_id)->first();
+
+        $adminTheme = env('ADMIN_THEME', 'adminLte');
+        return view('cargo::'.$adminTheme.'.pages.shipments.print-tracking')->with(['model' => $shipment,'client' => $client , 'PackageShipment' => $PackageShipment , 'ClientAddress' => $ClientAddress ]);
+    }
 
     public function printStickers(Request $request)
     {
@@ -1541,10 +1568,13 @@ class ShipmentController extends Controller
     public function tracking(Request $request)
     {
         $shipment = Shipment::where('code', $request->code)->orWhere('order_id', $request->code)->first();
-
+        $client = Client::where('id', $shipment->client_id)->first();    
+        $PackageShipment = PackageShipment::where('shipment_id',$shipment->id)->get();
+        $ClientAddress = ClientAddress::where('client_id',$shipment->client_id)->first();
+    
         $adminTheme = env('ADMIN_THEME', 'adminLte');
         if($shipment){
-            return view('cargo::'.$adminTheme.'.pages.shipments.tracking')->with(['model' => $shipment]);
+            return view('cargo::'.$adminTheme.'.pages.shipments.tracking')->with(['model' => $shipment,'client' => $client , 'PackageShipment' => $PackageShipment , 'ClientAddress' => $ClientAddress ]);
         }else{
             $error = __('cargo::messages.invalid_code');
             return view('cargo::'.$adminTheme.'.pages.shipments.tracking')->with(['error' => $error]);

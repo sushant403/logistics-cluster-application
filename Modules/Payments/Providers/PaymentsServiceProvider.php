@@ -31,7 +31,7 @@ class PaymentsServiceProvider extends ServiceProvider
 
         $adminTheme = env('ADMIN_THEME', 'adminLte');
         $aside_menu_settings = view('payments::'.$adminTheme.'.components.aside_menu_settings');
-        app('hook')->set('aside_menu_settings', $aside_menu_settings, 'array');
+        // app('hook')->set('aside_menu_settings', $aside_menu_settings, 'array');
     }
 
     /**

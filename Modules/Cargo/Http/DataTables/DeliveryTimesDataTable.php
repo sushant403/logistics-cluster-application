@@ -79,7 +79,7 @@ class DeliveryTimesDataTable extends DataTable
     public function query(DeliveryTime $model, Request $request)
     {
         $query = $model->newQuery();
-        
+
         // class filter for user only
         $delivery_time_filter = new DeliveryTimeFilter($query, $request);
 
@@ -96,6 +96,8 @@ class DeliveryTimesDataTable extends DataTable
     public function html()
     {
         $lang = \LaravelLocalization::getCurrentLocale();
+        $lang = get_locale_name_by_code($lang, $lang);
+
         return $this->builder()
             ->setTableId($this->table_id)
             ->columns($this->getColumns())

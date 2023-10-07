@@ -62,7 +62,7 @@ class MissionsDataTable extends DataTable
             ->editColumn('amount', function (Mission $model) {
                 $helper = new TransactionHelper();
                 $shipment_cost = $helper->calcMissionShipmentsAmount($model->getRawOriginal('type'),$model->id);
-                
+
                 if($model->status_id == Mission::DONE_STATUS && ( $model->getRawOriginal('type') == Mission::SUPPLY_TYPE || $model->getRawOriginal('type') == Mission::DELIVERY_TYPE ) ){
                     return format_price($model->amount);
                 }else{
@@ -111,6 +111,8 @@ class MissionsDataTable extends DataTable
     public function html()
     {
         $lang = \LaravelLocalization::getCurrentLocale();
+        $lang = get_locale_name_by_code($lang, $lang);
+
         return $this->builder()
             ->setTableId($this->table_id)
             ->columns($this->getColumns())

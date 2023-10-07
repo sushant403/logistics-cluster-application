@@ -136,6 +136,46 @@ $driver = 5;
 @endif
 
 
+@if (auth()->user()->can('manage-shipments') || in_array($user_role, [$admin, $client, $branch]))
+    @can('manage-users')
+        {{-- {{ areActiveRoutes(['users', ['class_name' => 'show']]) }} --}}
+        <li class="nav-item {{ areActiveRoutes(['receivers.index', 'receivers.create'], 'menu-is-opening menu-open active') }}">
+            <a href="#"
+                class="nav-link {{ areActiveRoutes(['receivers.index', 'receivers.create'], 'menu-is-opening menu-open active') }}">
+                <i class="fas fa-user"></i>
+                <p>
+                    {{ __('cargo::view.receiver') }}
+                    <i class="right fas fa-angle-left"></i>
+                </p>
+            </a>
+
+            <ul class="nav nav-treeview">
+
+                <!-- Receiver list -->
+                @if (auth()->user()->can('view-users') || $user_role == $admin)
+                    <li class="nav-item">
+                        <a href="{{ fr_route('receivers.index') }}" class="nav-link {{ areActiveRoutes(['receivers.index']) }}">
+                            <i class="fas fa-list fa-fw"></i>
+                             <p>{{ __('cargo::view.receiver_list') }}</p>
+                        </a>
+                    </li>
+                @endif
+                
+                <!-- Create new Receiver -->
+                @if (auth()->user()->can('create-users') || $user_role == $admin)
+                    <li class="nav-item">
+                        <a href="{{ fr_route('receivers.create') }}" class="nav-link {{ areActiveRoutes(['receivers.create']) }}">
+                            <i class="fas fa-plus fa-fw"></i>
+                            <p>{{ __('cargo::view.create_new_receiver') }}</p>
+                        </a>
+                    </li>
+                @endif
+
+            </ul>
+        </li>
+    @endcan
+@endif
+
 @if (auth()->user()->can('manage-missions') ||
     $user_role == $admin ||
     $user_role == $branch ||

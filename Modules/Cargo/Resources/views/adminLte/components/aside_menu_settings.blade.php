@@ -24,6 +24,7 @@ $admin = 1;
     </li>
 @endif
 
+{{--
 @if (auth()->user()->can('manage-delivery-time') || $user_role == $admin)
     <li class="nav-item {{ areActiveRoutes(['deliveryTime.index'], 'menu-is-opening menu-open active') }}">
         <a href="{{ fr_route('deliveryTime.index') }}"
@@ -33,6 +34,7 @@ $admin = 1;
         </a>
     </li>
 @endif
+--}}
 
 @if (auth()->user()->can('manage-packages') || $user_role == $admin)
     <li class="nav-item {{ areActiveRoutes(['packages.index'], 'menu-is-opening menu-open active') }}">

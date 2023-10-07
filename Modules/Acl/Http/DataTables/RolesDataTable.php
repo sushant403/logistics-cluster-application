@@ -70,6 +70,8 @@ class RolesDataTable extends DataTable
     public function html()
     {
         $lang = config('cms.langauges')[app()->getLocale()];
+        $lang = get_locale_name_by_code($lang, $lang);
+
         return $this->builder()
             ->setTableId($this->table_id)
             ->columns($this->getColumns())

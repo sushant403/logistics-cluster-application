@@ -687,7 +687,8 @@
                                         <div class="row">
                                             <div class="chbs-form-field col-md-6">
                                                 <label>{{ __('cargo::view.client_address') }}</label>
-                                                <input type="text" autocomplete="off" name="client_address" placeholder="{{ __('cargo::view.client_address') }}"/>
+                                                <div class="error" id="error_client_address">{{ __('cargo::view.check_number_length') }}</div>
+                                                <input type="text" onkeypress="clientAddress()" autocomplete="off" id="client_address" name="client_address" placeholder="{{ __('cargo::view.client_address') }}"/>
 
                                                 @if($googleMap)
                                                     <div class="location-client">
@@ -705,7 +706,8 @@
                                             </div>
                                             <div class="chbs-form-field col-md-6">
                                                 <label>{{ __('cargo::view.receiver_address') }}</label>
-                                                <input type="text" autocomplete="off" name="Shipment[reciver_address]" placeholder="{{ __('cargo::view.receiver_address') }}"/>
+                                                <div class="error" id="error_reciver_address"> {{ __('cargo::view.check_number_length') }}</div>
+                                                <input type="text" autocomplete="off" onkeypress="reciverAddress()" id="reciver_address" name="Shipment[reciver_address]" placeholder="{{ __('cargo::view.receiver_address') }}"/>
 
                                                 @if($googleMap)
                                                     <div class="location-receiver">
@@ -924,7 +926,7 @@
 @endsection
 
 @section('scripts')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.slim.min.js" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="{{ asset('themes/html/assets/js/jquery.slim.min.js') }}"  ></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.js"></script>
@@ -1161,6 +1163,22 @@
                 }
             }
         });
+        Modules\Cargo\Resources\views\adminLte\pages\shipments\shipment-calculator.blade.php
+        function clientAddress() {
+            var client_address = $('#client_address').val().length;
+            
+            if( client_address < 8 ){
+                validateInput('error_client_address');
+            }
+        }
+        
+        function reciverAddress() {
+            var reciver_address = $('#reciver_address').val().length;
+
+            if( reciver_address < 8 ){
+                validateInput('error_reciver_address');
+            }
+        }
 
         $('#change-state-from').change(function() {
             let id = $(this).val();

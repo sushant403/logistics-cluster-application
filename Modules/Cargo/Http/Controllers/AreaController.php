@@ -37,6 +37,7 @@ class AreaController extends Controller
      */
     public function index(AreasDataTable $dataTable)
     {
+
         breadcrumb([
             [
                 'name' => __('cargo::view.dashboard'),
@@ -48,7 +49,8 @@ class AreaController extends Controller
         ]);
         $data_with = [];
         $share_data = array_merge(get_class_vars(AreasDataTable::class), $data_with);
-
+        // dd('end');
+ 
         $adminTheme = env('ADMIN_THEME', 'adminLte');
         return $dataTable->render('cargo::'.$adminTheme.'.pages.areas.index', $share_data);
     }
@@ -173,6 +175,7 @@ class AreaController extends Controller
 
         $ids = $request->ids;
         Area::destroy($ids);
+        dd($reques);
         return response()->json(['message' => __('cargo::messages.multi_deleted')]);
     }
 }

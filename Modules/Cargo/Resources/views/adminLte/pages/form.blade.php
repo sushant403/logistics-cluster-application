@@ -3,11 +3,14 @@
 <!--begin::Input group --- countries group -->
 <div class="row mb-6">
     @php
+        $shadow = isset($shadow) ? (true === $shadow) : true;
+        $hasTitle = isset($title) ? (true === $title) : true;
         $user_role = auth()->user()->role;
         $admin  = 1;
     @endphp
     <div class="col-xl-12 col-md-6 mb-6">
-        <div class="card shadow card-permissions">
+        <div class="card @if($shadow) shadow @endif @if($hasTitle) card-permissions @endif">
+            @if($hasTitle)
             <div class="card-header">
                 <div class="group-name">
                 {{ $form_title }}
@@ -23,6 +26,7 @@
                     </div>
                 </div>
             </div>
+            @endif
 
             <div class="card-body">
                 <div class="view-permissions">
@@ -36,19 +40,20 @@
                                             name="covered_items[]"
                                             type="checkbox"
                                             id="check_box_item{{ $item->name }}"
-                                            value="{{ $item->id }}"
                                             @if($item->covered == 1) checked @endif
-                                        >
+                                            value="{{ $item->id }}">
                                         <label
                                             class="custom-control-label"
-                                            for="check_box_item{{ $item->name }}"
-                                        >
+                                            for="check_box_item{{ $item->name }}">
                                             {{ str_replace('-', ' ', $item->name) }}
                                         </label>
                                         @if(auth()->user()->can('add-covered-regions') || $user_role == $admin )
                                             @if($typeForm == 'country')
+                                                <br>
                                                 @if($item->covered == 1)
-                                                    <a href="{{route('countries.covered_states',['country_id'=>$item->id])}}">{{ __('cargo::view.add_covered_regions') }}</a>
+                                                    <a href="{{ route('countries.covered_states', ['country_id' => $item->id]) }}">
+                                                        {{ __('cargo::view.add_covered_regions') }}
+                                                    </a>
                                                 @endif
                                             @endif
                                         @endif

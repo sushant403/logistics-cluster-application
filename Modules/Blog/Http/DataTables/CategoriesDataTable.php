@@ -85,7 +85,7 @@ class CategoriesDataTable extends DataTable
     public function query(Category $model, Request $request)
     {
         $query = $model->with('categoryParent')->withCount('posts as count_posts')->newQuery();
-        
+
         // class filter for tag only
         $tag_filter = new CategoryFilter($query, $request);
 
@@ -102,6 +102,8 @@ class CategoriesDataTable extends DataTable
     public function html()
     {
         $lang = \LaravelLocalization::getCurrentLocale();
+        $lang = get_locale_name_by_code($lang, $lang);
+
         return $this->builder()
             ->setTableId($this->table_id)
             ->columns($this->getColumns())

@@ -14,7 +14,7 @@
                 <div class="tooltip"> Fill this form with valid database credentials. </div>
             </div>
 
-            @if (isset($error))
+            @if (false === empty($error))
             <div class="row" style="margin: 20px 0;">
                 <div class="col-md-12">
                 <div class="tooltip alert alert-danger">
@@ -23,33 +23,33 @@
                 </div>
             </div>
             @endif
-            
+
             <form method="POST" action="{{ route('installation.install.db') }}">
                 @csrf
                 <div class="form-row">
                     <label for="app_url">App Url</label>
-                    <input type="text" class="form-control" id="app_url" name = "APP_URL" required autocomplete="off">
-                    <input type="hidden" name = "types[]" value="APP_URL">
+                    <input type="text" class="form-control" id="app_url" name="APP_URL" value="{{ $values['app_url'] }}" required autocomplete="off">
+                    <input type="hidden" name="types[]" value="APP_URL">
                 </div>
                 <div class="form-row">
                     <label for="db_host">Database Host</label>
-                    <input type="text" class="form-control" id="db_host" name = "DB_HOST" required autocomplete="off">
-                    <input type="hidden" name = "types[]" value="DB_HOST">
+                    <input type="text" class="form-control" id="db_host" name="DB_HOST" value="{{ $values['db_host'] }}" required autocomplete="off">
+                    <input type="hidden" name="types[]" value="DB_HOST">
                 </div>
                 <div class="form-row">
                     <label for="db_name">Database Name</label>
-                    <input type="text" class="form-control" id="db_name" name = "DB_DATABASE" required autocomplete="off">
-                    <input type="hidden" name = "types[]" value="DB_DATABASE">
+                    <input type="text" class="form-control" id="db_name" name="DB_DATABASE" value="{{ $values['db_name'] }}" required autocomplete="off">
+                    <input type="hidden" name="types[]" value="DB_DATABASE">
                 </div>
                 <div class="form-row">
                     <label for="db_user">Database Username</label>
-                    <input type="text" class="form-control" id="db_user" name = "DB_USERNAME" required autocomplete="off">
-                    <input type="hidden" name = "types[]" value="DB_USERNAME">
+                    <input type="text" class="form-control" id="db_user" name="DB_USERNAME" value="{{ $values['db_user'] }}" required autocomplete="off">
+                    <input type="hidden" name="types[]" value="DB_USERNAME">
                 </div>
                 <div class="form-row">
                     <label for="db_pass">Database Password</label>
-                    <input type="password" class="form-control" id="db_pass" name = "DB_PASSWORD" autocomplete="off">
-                    <input type="hidden" name = "types[]" value="DB_PASSWORD">
+                    <input type="password" class="form-control" id="db_pass" name="DB_PASSWORD" autocomplete="off">
+                    <input type="hidden" name="types[]" value="DB_PASSWORD">
                 </div>
                 <div class="actions">
                     <ul>

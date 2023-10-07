@@ -49,7 +49,7 @@ class ClientsDataTable extends DataTable
                 return view($adminTheme.'.components.modules.datatable.columns.checkbox', ['model' => $model, 'ifHide' => $model->id == 0]);
             })
             ->editColumn('branch_id', function (Client $model) {
-                return $model->branch->name;
+                return $model->branch->name ?? "Null" ;
             })
             ->editColumn('created_at', function (Client $model) {
                 return date('d M, Y H:i', strtotime($model->created_at));
@@ -99,6 +99,8 @@ class ClientsDataTable extends DataTable
     public function html()
     {
         $lang = \LaravelLocalization::getCurrentLocale();
+        $lang = get_locale_name_by_code($lang, $lang);
+
         return $this->builder()
             ->setTableId($this->table_id)
             ->columns($this->getColumns())

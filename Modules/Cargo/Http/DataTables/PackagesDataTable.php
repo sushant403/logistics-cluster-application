@@ -77,7 +77,7 @@ class PackagesDataTable extends DataTable
     public function query(Package $model, Request $request)
     {
         $query = $model->newQuery();
-        
+
         // class filter for user only
         $package_filter = new PackageFilter($query, $request);
 
@@ -94,6 +94,8 @@ class PackagesDataTable extends DataTable
     public function html()
     {
         $lang = \LaravelLocalization::getCurrentLocale();
+        $lang = get_locale_name_by_code($lang, $lang);
+
         return $this->builder()
             ->setTableId($this->table_id)
             ->columns($this->getColumns())

@@ -13,14 +13,17 @@ use Modules\Cargo\Http\Filter\AreaFilter;
 
 class AreasDataTable extends DataTable
 {
-
     public $table_id = 'areas';
     public $btn_exports = [
         'excel',
         'print',
         'pdf'
     ];
-    public $filters = ['state_id'];
+
+    public $filters = [
+        'state_id',
+    ];
+
     /**
      * Build DataTable class.
      *
@@ -60,7 +63,7 @@ class AreasDataTable extends DataTable
             ->editColumn('country_id', function (Area $model) {
                 return $model->country ? $model->country->name : '';
             })
-            
+
             ->editColumn('created_at', function (Area $model) {
                 return date('d M, Y H:i', strtotime($model->created_at));
             })
@@ -79,7 +82,7 @@ class AreasDataTable extends DataTable
     public function query(Area $model, Request $request)
     {
         $query = $model->newQuery();
-        
+
         // class filter for user only
         $area_filter = new AreaFilter($query, $request);
 
@@ -96,6 +99,8 @@ class AreasDataTable extends DataTable
     public function html()
     {
         $lang = \LaravelLocalization::getCurrentLocale();
+        $lang = get_locale_name_by_code($lang, $lang);
+
         return $this->builder()
             ->setTableId($this->table_id)
             ->columns($this->getColumns())
@@ -107,7 +112,7 @@ class AreasDataTable extends DataTable
             ->parameters([
                 'scrollX' => true,
                 'dom' => 'Bfrtip',
-                'language' => ['url' => "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/$lang.json"],
+                'language' => ['url' => "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/{$lang}.json"],
                 'buttons' => [
                     ...$this->buttonsExport(),
                 ],

@@ -28,6 +28,7 @@ if (\Illuminate\Support\Facades\Schema::hasTable('translations') && check_module
 
         Route::get('shipments/tracking/view', 'ShipmentController@trackingView')->name('shipments.view.tracking');
         Route::get('shipments/tracking/{code?}','ShipmentController@tracking')->name('shipments.tracking');
+        Route::get('shipments/tracking/print/{shipment}','ShipmentController@printTracking')->name('tracking.print');
 
         Route::get('shipments/calculator','ShipmentController@calculator')->name('shipments.calculator');
         Route::post('shipments/calculator/store','ShipmentController@calculatorStore')->name('shipments.calculator.store');
@@ -296,6 +297,16 @@ if (\Illuminate\Support\Facades\Schema::hasTable('translations') && check_module
 
             Route::get('/sms-gateways', 'BusinessSettingsController@sms_gateways')->name('sms_gateways.index');
 
+           Route::prefix('receiver')->group(function() {
+                Route::get('receiver/index','ReceiversController@index')->name('receivers.index');
+                Route::get('receiver/create','ReceiversController@create')->name('receivers.create');
+                Route::post('receiver/store','ReceiversController@store')->name('receiver.store');
+                Route::post('receiver/store','ReceiversController@store')->name('receiver.store');
+                Route::get('receiver/edit/{id}','ReceiversController@edit')->name('receiver.edit');
+                Route::PUT('receiver/update/{receiver}','ReceiversController@update')->name('receiver.update');
+                Route::DELETE('receiver/destroy/{id}','ReceiversController@destroy')->name('receiver.destroy');
+           });
+
         });
     });
 }else{
@@ -307,6 +318,7 @@ if (\Illuminate\Support\Facades\Schema::hasTable('translations') && check_module
 
     Route::get('shipments/tracking/view', 'ShipmentController@trackingView')->name('shipments.view.tracking');
     Route::get('shipments/tracking/{code?}','ShipmentController@tracking')->name('shipments.tracking');
+    Route::get('shipments/tracking/print/{shipment}','ShipmentController@printTracking')->name('tracking.print');
 
     Route::get('shipments/calculator','ShipmentController@calculator')->name('shipments.calculator');
     Route::post('shipments/calculator/store','ShipmentController@calculatorStore')->name('shipments.calculator.store');
@@ -569,6 +581,15 @@ if (\Illuminate\Support\Facades\Schema::hasTable('translations') && check_module
         Route::get('/social-login', 'BusinessSettingsController@social_login')->name('social_login.index');
 
         Route::get('/sms-gateways', 'BusinessSettingsController@sms_gateways')->name('sms_gateways.index');
+
+    });
+    Route::prefix('receiver')->group(function() {
+        Route::get('receiver/index','ReceiversController@index')->name('receivers.index');
+        Route::get('receiver/create','ReceiversController@create')->name('receivers.create');
+        Route::post('receiver/store','ReceiversController@store')->name('receiver.store');
+        Route::get('receiver/edit/{id}','ReceiversController@edit')->name('receiver.edit');
+        Route::DELETE('receiver/destroy/{id}','ReceiversController@destroy')->name('receiver.destroy');
+        Route::PUT('receiver/update/{receiver}','ReceiversController@update')->name('receiver.update');
 
     });
 }

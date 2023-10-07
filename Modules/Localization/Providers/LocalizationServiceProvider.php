@@ -33,7 +33,7 @@ class LocalizationServiceProvider extends ServiceProvider
 
         $aside_menu_settings = view('localization::'.$adminTheme.'.components.aside_menu_settings'); 
         $aside_menu_settings['order'] = 9;
-        app('hook')->set('aside_menu_settings', $aside_menu_settings, 'array');
+        // app('hook')->set('aside_menu_settings', $aside_menu_settings, 'array');
     }
 
     /**

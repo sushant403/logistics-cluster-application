@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
-    
+
     public function index()
     {
         breadcrumb([
@@ -41,7 +41,7 @@ class HomeController extends Controller
         $permission['curl_enabled']           = function_exists('curl_version');
         $permission['db_file_write_perm']     = is_writable(base_path('.env'));
         $permission['routes_file_write_perm'] = is_writable(base_path('app/Providers/RouteServiceProvider.php'));
-        
+
         $adminTheme = env('ADMIN_THEME', 'adminLte');
         return view($adminTheme.'.pages.oldDatabase.step1', compact('permission'));
     }
@@ -91,7 +91,7 @@ class HomeController extends Controller
             $path = base_path('.env');
             if (file_exists($path)) {
                 foreach ($request->types as $type) {
-                    $this->writeEnvironmentFile($type, $request[$type]);
+                    update_env_value($type, $request[$type]);
                 }
                 return redirect()->route('step4');
             }else {
@@ -110,7 +110,7 @@ class HomeController extends Controller
         set_time_limit(0);
         ini_set('memory_limit', '-1');
         Artisan::call('database:import');
-        
+
         Auth::guard('web')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
@@ -125,23 +125,4 @@ class HomeController extends Controller
             return false;
         }
     }
-
-    public function writeEnvironmentFile(string $key, $value = '') {
-
-        $path = app()->environmentFilePath();
-        $env = file_get_contents($path);
-
-        $old_value = env($key);
-
-        if (!str_contains($env, $key.'=')) {
-            $env .= sprintf("%s=%s\n", $key, $value);
-        } else if ($old_value) {
-            $env = str_replace(sprintf('%s=%s', $key, $old_value), sprintf('%s=%s', $key, $value), $env);
-        } else {
-            $env = str_replace(sprintf('%s=', $key), sprintf('%s=%s',$key, $value), $env);
-        }
-
-        file_put_contents($path, $env);
-    }
-
 }

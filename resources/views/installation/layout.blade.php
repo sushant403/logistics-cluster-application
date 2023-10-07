@@ -8,7 +8,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="{{ asset('assets/installation/fonts/material-design-iconic-font/css/material-design-iconic-font.css') }}">
 	<link rel="stylesheet" href="{{ asset('assets/installation/css/style.css') }}">
-	
+
 	@yield('style')
 
 	<script>
@@ -20,7 +20,7 @@
 
 
         @yield('content')
-        
+
 	</div>
 
     <!--begin::Global Config(global config for global JS scripts)-->
@@ -87,13 +87,13 @@
     <!--end::Global Config-->
 
     <!--begin::Global Theme Bundle(used by all pages)-->
-    <script src="{{ asset('assets/dashboard/plugins/global/plugins.bundle.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/plugins/custom/prismjs/prismjs.bundle.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/js/scripts.bundle.js') }}"></script>
+    <script src="{{ asset('assets/lte/plugins/global/plugins.bundle.js') }}"></script>
+    {{-- <script src="{{ asset('assets/dashboard/plugins/custom/prismjs/prismjs.bundle.js') }}"></script> --}}
+    <script src="{{ asset('assets/lte/js/scripts.bundle.js') }}"></script>
     <!--end::Global Theme Bundle-->
-    
-	<script src="{{ asset('assets/js/vendors.js') }}" ></script>
-	<script src="{{ asset('assets/js/aiz-core.js') }}" ></script>
+
+	{{-- <script src="{{ asset('assets/js/vendors.js') }}" ></script> --}}
+	{{-- <script src="{{ asset('assets/js/aiz-core.js') }}" ></script> --}}
 
 
     @yield('script')

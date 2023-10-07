@@ -6,7 +6,7 @@
   <!-- scripts -->
   <script type="text/javascript" src="{{ asset('themes/html/assets/js/functions.js') }}"></script>
   <script src="{{ asset('themes/easyship/assets/js/main.js') }}"></script>
-  <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+  <script type="text/javascript" src="{{ asset('themes/html/assets/js/feather.min.js') }}"></script>
 <script>
     feather.replace();
 </script>

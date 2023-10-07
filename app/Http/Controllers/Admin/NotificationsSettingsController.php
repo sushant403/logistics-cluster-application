@@ -17,7 +17,7 @@ class NotificationsSettingsController extends Controller
         // check on permissions
         $this->middleware('can:manage-notifications-setting')->only('index', 'update');
     }
-    
+
     public function index()
     {
         breadcrumb([
@@ -42,20 +42,20 @@ class NotificationsSettingsController extends Controller
     {
         if(isset($request->fields['email'])){
             foreach($request->fields['email'] as $key => $item){
-                setEnvValue($key, $item ?? '');
+                update_env_value($key, $item ?? '');
                 if( $key == 'MAIL_DRIVER'){
                     if($item != 'mailgun'){
-                        setEnvValue('MAIL_DRIVER', 'sendmail');
+                        update_env_value('MAIL_DRIVER', 'sendmail');
                     }
                 }
             }
-            
+
         }
 
         foreach(NotificationsSettings::fields() as $field_key => $field){
             if(!isset($request->fields[$field_key])){
                 $settings->$field_key   =   false;
-            
+
             }else{
                 if ($field['type'] == 'bool') {
                     $settings->$field_key   =   isset($request->fields[$field_key]) ? true : false;
@@ -92,7 +92,7 @@ class NotificationsSettingsController extends Controller
         $settings->save();
 
         event(new NotificationSettingsUpdated($request->fields));
-        
+
         return redirect()->back();
     }
 

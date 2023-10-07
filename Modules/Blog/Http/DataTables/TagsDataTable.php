@@ -79,7 +79,7 @@ class TagsDataTable extends DataTable
     public function query(Tag $model, Request $request)
     {
         $query = $model->with('creator')->withCount('posts as count_posts')->newQuery();
-        
+
         // class filter for tag only
         $tag_filter = new TagFilter($query, $request);
 
@@ -96,6 +96,8 @@ class TagsDataTable extends DataTable
     public function html()
     {
         $lang = \LaravelLocalization::getCurrentLocale();
+        $lang = get_locale_name_by_code($lang, $lang);
+
         return $this->builder()
             ->setTableId($this->table_id)
             ->columns($this->getColumns())

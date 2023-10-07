@@ -22,12 +22,13 @@
 <link rel="stylesheet" id="kolyoum-default-css" href="{{ asset('themes/goshippo/assets/css/post.style.css') }}" type="text/css" media="all" />
 
 {{-- Style --}}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous" />
+<link rel="stylesheet" href="{{ asset('themes/easyship/assets/css/bootstrap.min.css') }}"  />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet" />
-<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
-<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
+<link rel="stylesheet" href="{{ asset('themes/easyship/assets/css/slick.css') }}" />
+<link rel="stylesheet" href="{{ asset('themes/easyship/assets/css/slick-theme.css') }}" />
+
 
 
 <link rel="stylesheet" href="{{ asset('themes/goshippo/assets/css/style.css') }}" />

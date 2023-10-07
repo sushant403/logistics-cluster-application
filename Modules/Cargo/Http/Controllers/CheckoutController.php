@@ -67,14 +67,15 @@ class CheckoutController extends Controller
             } elseif ($shipment->payment_method_id == 'razorpay') {
                 $razorpay = new RazorpayController;
                 return $razorpay->payWithRazorpay($shipment);
-            } elseif ($shipment->payment_method_id == 'paystack') {   
-                
+            } elseif ($shipment->payment_method_id == 'paystack') {
+
                 $paymentSettings = resolve(\Modules\Payments\Entities\PaymentSetting::class)->toArray();
                 $paystack_payment  = json_decode($paymentSettings['paystack'], true);
 
-                setEnvValue('PAYSTACK_PUBLIC_KEY', $paystack_payment['PAYSTACK_PUBLIC_KEY'] ?? '' );
-                setEnvValue('PAYSTACK_SECRET_KEY', $paystack_payment['PAYSTACK_SECRET_KEY'] ?? '');
-                setEnvValue('MERCHANT_EMAIL', $paystack_payment['PAYSTACK_MERCHANT_EMAIL'] ?? '');
+                update_env_value('PAYSTACK_PUBLIC_KEY', $paystack_payment['PAYSTACK_PUBLIC_KEY'] ?? '' );
+                update_env_value('PAYSTACK_SECRET_KEY', $paystack_payment['PAYSTACK_SECRET_KEY'] ?? '');
+                update_env_value('MERCHANT_EMAIL', $paystack_payment['PAYSTACK_MERCHANT_EMAIL'] ?? '');
+
                 $paystack = new PaystackController;
                 return $paystack->redirectToGateway($request,$shipment);
             } elseif ($shipment->payment_method_id == 'voguepay') {

@@ -152,8 +152,8 @@
         <label class="col-form-label fw-bold fs-6 required">{{ __('cargo::view.table.owner_phone') }}</label>
         <!--end::Label-->
         <div class="input-group mb-4">
-            <input type="tel" name="responsible_mobile" class=" phone_input phone_input_1  number-only  form-control form-control-lg @error('responsible_mobile') is-invalid @enderror" placeholder="{{ __('cargo::view.table.owner_phone') }}" value="{{ old('responsible_mobile', isset($model) ? $model->country_code.$model->responsible_mobile : '') }}" dir="ltr" autocomplete="off" required   />
-            <input type="hidden" class="country_code country_code_1" name="country_code" value="{{ old('country_code', isset($model) ? $model->country_code : '+1') }}" data-reflection="phone">
+            <input type="tel" name="responsible_mobile" class=" phone_input phone_input_1  number-only  form-control form-control-lg @error('responsible_mobile') is-invalid @enderror" placeholder="{{ __('cargo::view.table.owner_phone') }}" value="{{ old('responsible_mobile', isset($model) ? $model->country_code.$model->responsible_mobile : base_country_code()) }}" dir="ltr" autocomplete="off" required   />
+            <input type="hidden" class="country_code country_code_1" name="country_code" value="{{ old('country_code', isset($model) ? $model->country_code : base_country_code()) }}" data-reflection="phone">
             @error('responsible_mobile')
                 <div class="invalid-feedback">
                     {{ $message }}
@@ -192,8 +192,8 @@
         <label class="col-form-label fw-bold fs-6">{{ __('cargo::view.table.follow_up_mobile') }}</label>
         <!--end::Label-->
         <div class="input-group mb-4">
-            <input type="tel" name="follow_up_mobile" class=" phone_input phone_input_2  number-only form-control form-control-lg @error('follow_up_mobile') is-invalid @enderror" placeholder="{{ __('cargo::view.table.follow_up_mobile') }}" value="{{ old('follow_up_mobile', isset($model) ? $model->follow_up_country_code.$model->follow_up_mobile : '') }}" dir="ltr" autocomplete="off"  />
-            <input type="hidden" class="country_code  country_code_2 " name="follow_up_country_code" value="{{ old('follow_up_country_code', isset($model) ? $model->follow_up_country_code : '993') }}" data-reflection="phone">
+            <input type="tel" name="follow_up_mobile" class=" phone_input phone_input_2  number-only form-control form-control-lg @error('follow_up_mobile') is-invalid @enderror" placeholder="{{ __('cargo::view.table.follow_up_mobile') }}" value="{{ old('follow_up_mobile', isset($model) ? $model->follow_up_country_code.$model->follow_up_mobile :  base_country_code()) }}" dir="ltr" autocomplete="off"  />
+            <input type="hidden" class="country_code  country_code_2 " name="follow_up_country_code" value="{{ old('follow_up_country_code', isset($model) ? $model->follow_up_country_code :  base_country_code()) }}" data-reflection="phone">
             @error('follow_up_mobile')
                 <div class="invalid-feedback">
                     {{ $message }}
@@ -1132,7 +1132,7 @@
                 let iti = window.intlTelInput(input, {
                     separateDialCode: true,
                     utilsScript: window.static_asset_utils_file,
-                    initialCountry: "US",
+                    initialCountry: "ng",
                     preferredCountries: ["eg","ng","ke"],
                     autoPlaceholder: "aggressive"
                 });
@@ -1203,7 +1203,7 @@
                 let iti = window.intlTelInput(input, {
                     separateDialCode: true,
                     utilsScript: window.static_asset_utils_file,
-                    initialCountry: "US",
+                    initialCountry: "ng",
                     preferredCountries: ["eg","ng","ke"],
                     autoPlaceholder: "aggressive"
                 });

@@ -69,7 +69,7 @@ class CurrenciesDataTable extends DataTable
     public function query(Currency $model, Request $request)
     {
         $query = $model->newQuery();
-        
+
         // class filter for user only
         $Currency_filter = new CurrencyFilter($query, $request);
 
@@ -86,6 +86,8 @@ class CurrenciesDataTable extends DataTable
     public function html()
     {
         $lang = \LaravelLocalization::getCurrentLocale();
+        $lang = get_locale_name_by_code($lang, $lang);
+
         return $this->builder()
             ->setTableId($this->table_id)
             ->columns($this->getColumns())

@@ -22,7 +22,7 @@
                     Gather the information mentioned above before hitting the start installation button. If you are ready....
                 </div>
             </div>
-            
+
             <div class="actions">
                 <ul>
                     <li><a href="#" class="disabled">Previous</a></li>
@@ -31,11 +31,4 @@
             </div>
         </section>
     </div>
-<script type="text/javascript">
-  if({{ Route::has('login') }}){    
-  	window.stop();
-  }else{
-    window.location.reload();
-  }
-</script>
 @endsection

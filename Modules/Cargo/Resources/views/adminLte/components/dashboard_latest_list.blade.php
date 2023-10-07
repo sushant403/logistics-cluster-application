@@ -62,7 +62,7 @@
                             <td>{{$shipment->type}}</td>
                             <td>
                                 @if(in_array($user_role ,[$admin,$auth_branch]) || auth()->user()->can('manage-customers') )
-                                    <a href="{{route('clients.show',$shipment->client_id)}}">{{$shipment->client->name}}</a>
+                                    <a href="{{route('clients.show',$shipment->client_id)}}">{{$shipment->client->name ?? 'No Client Name'}}</a>
                                 @else
                                     {{$shipment->client->name}}
                                 @endif
@@ -175,7 +175,7 @@
                                     <td>{{$shipment->type}}</td>
                                     <td>
                                         @if(in_array($user_role ,[$admin,$auth_branch]) || auth()->user()->can('manage-customers') )
-                                            <a href="{{route('clients.show',$shipment->client_id)}}">{{$shipment->client->name}}</a>
+                                            <a href="{{route('clients.show',$shipment->client_id)}}">{{$shipment->client->name ?? 'No Client Name'}}</a>
                                         @else
                                             {{$shipment->client->name}}
                                         @endif

@@ -110,17 +110,6 @@
                             @endforeach
                         @endif
 
-
-                        @can('manage-notifications-setting')
-                            <li class="nav-item">
-                                <a href="{{ fr_route('admin.settings.notifications') }}"
-                                    class="nav-link {{ areActiveRoutes(['admin.settings.notifications']) }}">
-                                    <i class="fa fa-bell fa-fw"></i>
-                                    <p>@lang('view.notifications_settings')</p>
-                                </a>
-                            </li>
-                        @endcan
-
                         @can('manage-google-setting')
                             <li class="nav-item">
                                 <a href="{{ fr_route('admin.settings.google') }}"
@@ -131,35 +120,6 @@
                             </li>
                         @endcan
 
-                        @can('manage-theme-setting')
-                            <li class="nav-item">
-                                <a href="{{ fr_route('default-theme.edit') }}"
-                                    class="nav-link {{ active_route('default-theme.edit') }}  {{ areActiveRoutes(['default-theme.edit']) }}">
-                                    <i class="fab fa-affiliatetheme fa-fw"></i>
-                                    <p>@lang('view.themes')</p>
-                                </a>
-                            </li>
-                        
-                            <li class="nav-item">
-                                <a href="{{ fr_route('theme-setting.edit', ['place' => 'homepage']) }}"
-                                    class="nav-link {{ active_route('theme-setting.edit', ['place' => 'homepage']) }}  {{ areActiveRoutes(['theme-setting.edit']) }}">
-                                    <i class="fab fa-affiliatetheme fa-fw"></i>
-                                    <p>@lang('view.theme_setting')</p>
-                                </a>
-                            </li>
-                        @endcan
-
-                        @if (auth()->user()->can('update-system') || auth()->user()->role == 1)
-                            <li class="nav-item">
-                                <a href="{{ fr_route('backup.database') }}"
-                                    class="nav-link {{ active_route('backup.database') }}  {{ areActiveRoutes(['backup.database']) }}">
-                                    <i class="fa-brands fa-ubuntu fa-fw"></i>
-                                    <p>
-                                        @lang('view.backup_database')
-                                    </p>
-                                </a>
-                            </li>
-                        @endif
                     </ul>
 
                 </li>

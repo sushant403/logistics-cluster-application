@@ -11,27 +11,49 @@
         <a class="steps last"><span class="current-info audible"></span><span class="number">7.</span> </a>
         <section>
             <div class="form-row">
-                <div class="tooltip"> We ran diagnosis on your server. Review the items that have a red mark on it. <br> If everything is green, you are good to go to the next step. </div>
+                <div class="tooltip">Please review server requirements. If all items are checked, you may proceed to enter your database connection credentials. </div>
 
                 <ul class="list-group">
                     @php
                         $phpVersion = number_format((float)phpversion(), 2, '.', '');
                     @endphp
                     <li class="list-group-item text-semibold check @if ($phpVersion >= 8.0) check success @else close faild @endif">
-                        Php version 8.0 +
+                        <p>
+                            Php version 8.0 +
+                        </p>
+                        <small class="text-gray-500">
+                            <code>PHP v8.0</code> or higher is required for the application to work.
+                        </small>
                     </li>
                     <li class="list-group-item text-semibold @if ($permission['curl_enabled']) check success @else close faild @endif">
-                        Curl Enabled
+                        <p>
+                            CURL Enabled
+                        </p>
+                        <small class="text-gray-500">
+                            <code>cURL</code> extension is required to fetch remote data.
+                        </small>
                     </li>
                     <li class="list-group-item text-semibold check @if ($permission['db_file_write_perm']) check success @else close faild @endif">
-                        <b>.env</b> File Permission
+                        <p>
+                            <b>.env</b> File Permission
+                        </p>
+                        <small class="text-gray-500">
+                            <code>.env</code> file must be writable.
+                        </small>
                     </li>
                     <li class="list-group-item text-semibold check @if ($permission['routes_file_write_perm']) check success @else close faild @endif">
-                        <b>RouteServiceProvider.php</b> File Permission
+                        <p>
+                            <b>RouteServiceProvider.php</b> File Permission
+                        </p>
+                        <small class="text-gray-500">
+                            <code>app/Providers/RouteServiceProvider.php</code>
+                            <br>
+                            file must be writable.
+                        </small>
                     </li>
                 </ul>
             </div>
-            
+
             <div class="actions">
                 <ul>
                     <li><a href="{{ url('/installation') }}">Previous</a></li>

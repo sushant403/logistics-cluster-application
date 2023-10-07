@@ -9,10 +9,13 @@ use Storage;
 use ZipArchive;
 use Illuminate\Support\Str;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Facades\File; 
+use Illuminate\Support\Facades\File;
 use DB;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
+
+
+use Carbon\Carbon;
 
 class SystemController extends Controller
 {
@@ -25,7 +28,7 @@ class SystemController extends Controller
         // check on permissions
         $this->middleware('user_role:1');
     }
-    
+
     public function getSystemUpdate()
     {
         breadcrumb([
@@ -46,9 +49,9 @@ class SystemController extends Controller
         $request->validate([
             'zip_file' => 'required|mimes:zip'
         ]);
-        
+
         set_time_limit(0);
-        
+
         $originFileName = basename($request->file('zip_file')->getClientOriginalName(), '.'.$request->file('zip_file')->getClientOriginalExtension());
         $originFileName = $originFileName . 'z';
         $updateVersion  = floatval(get_string_between($originFileName,'_','z'));
@@ -112,5 +115,80 @@ class SystemController extends Controller
             return redirect()->back()->with(['error_message_alert' => __('view.please_update_version') .' '.$currentVersion]);
         }
     }
+
+    public function getBackupDatabase()
+    {
+        breadcrumb([
+            [
+                'name' => __('view.backup_database')
+            ]
+             
+        ]);  
+        $adminTheme = env('ADMIN_THEME', 'adminLte');
+        return view($adminTheme.'.pages.backup-database');
+
+        
+    }
+
+  
+    
+    public function  postBackupDatabase()
+    {
+        if (env('DEMO_MODE') == 'On') {
+            return redirect()->back()->with(['error_message_alert' => __('view.demo_mode')]);
+
+        }else{
+            @ini_set('max_execution_time', 0);
+            @set_time_limit(0);
+                
+            $return = "";
+            $database = 'Tables_in_'.DB::getDatabaseName();
+            $tables = array();
+            $result = DB::select("SHOW TABLES");
+
+            foreach($result as $table){
+                $tables[] = $table->$database;
+            }
+
+
+            //loop through the tables
+            foreach($tables as $table){			
+                $return .= "DROP TABLE IF EXISTS $table;";
+
+                $result2 = DB::select("SHOW CREATE TABLE $table");
+                $row2 = $result2[0]->{'Create Table'};
+
+                $return .= "\n\n".$row2.";\n\n";
+                
+                $result = DB::select("SELECT * FROM $table");
+
+                foreach($result as $row){	
+                    $return .= "INSERT INTO $table VALUES(";
+                    foreach($row as $key=>$val){	
+                        $return .= "'".addslashes($val)."'," ;	
+                    }
+                    $return = substr_replace($return, "", -1);
+                    $return .= ");\n";
+                }
+    
+                $return .= "\n\n\n";
+            }
+
+
+            $fileName =  env('DB_DATABASE') . "_" . date('Ymd_His') . '.sql';
+            $file = storage_path('app/backups/' . $fileName);
+        
+            //save file
+            $handle = fopen($file,'w+');
+            fwrite($handle,$return);
+            fclose($handle);
+            
+            return response()->download($file);
+            return redirect()->back()->with('success', _lang('Backup Created Sucessfully'));		
+
+        }
+
+        }    
+            
 
 }

@@ -32,7 +32,7 @@ $color = array_key_exists('main_color', $data) && $data['main_color'] ? " {$data
 <script type="text/javascript" src="{{ asset('themes/html/assets/js/plugins.js') }}"></script>
 
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous" />
+<link rel="stylesheet" href="{{ asset('themes/easyship/assets/css/bootstrap.min.css') }}"  />
 <link rel="stylesheet" href="{{ asset('themes/easyship/assets/css/style.css') }}" />
 
 <link rel="stylesheet" id="wooohoo-ilightbox-skin-css" href="{{ asset('themes/html/assets/css/ilightbox/dark-skin/skin.css') }}" type="text/css" media="all" />

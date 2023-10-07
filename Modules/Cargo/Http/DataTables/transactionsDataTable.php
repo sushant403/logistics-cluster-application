@@ -53,7 +53,7 @@ class transactionsDataTable extends DataTable
                 $transaction_type[Transaction::MESSION_TYPE] = "mission";
                 $transaction_type[Transaction::SHIPMENT_TYPE] = "shipment";
                 $transaction_type[Transaction::MANUAL_TYPE] = "manual";
-                
+
                 if($transaction_type[$model->type] == 'mission' && $model->mission_id){
                     $mission_code = $model->mission && $model->mission->code != null ? $model->mission->code : ' ';
                     return __('cargo::view.mission').' ('. $mission_code .')' ?? "" ;
@@ -123,6 +123,8 @@ class transactionsDataTable extends DataTable
     public function html()
     {
         $lang = \LaravelLocalization::getCurrentLocale();
+        $lang = get_locale_name_by_code($lang, $lang);
+
         return $this->builder()
             ->setTableId($this->table_id)
             ->columns($this->getColumns())

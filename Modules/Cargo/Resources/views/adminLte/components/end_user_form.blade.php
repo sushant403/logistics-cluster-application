@@ -14,8 +14,8 @@ $branches = Modules\Cargo\Entities\Branch::where('is_archived',0)->get();
     <!--begin::Input group-->
     <div class="col-lg-8 fv-row">
         <div class="input-group mb-4">
-            <input type="tel" name="responsible_mobile"  id="phone" dir="ltr" autocomplete="off" required  class=" phone_input number-only form-control form-control-lg inptFielsd  @error('responsible_mobile') is-invalid @enderror" placeholder="{{ __('cargo::view.table.phone') }}" value="{{ old('responsible_mobile', isset($model) ? $model->country_code.$model->responsible_mobile : '') }}" />
-            <input type="hidden" class="country_code" name="country_code" value="{{ old('country_code', isset($model) ? $model->country_code : '+1') }}" data-reflection="phone">
+            <input type="tel" name="responsible_mobile"  id="phone" dir="ltr" autocomplete="off" required  class=" phone_input number-only form-control form-control-lg inptFielsd  @error('responsible_mobile') is-invalid @enderror" placeholder="{{ __('cargo::view.table.phone') }}" value="{{ old('responsible_mobile', isset($model) ? $model->country_code.$model->responsible_mobile : base_country_code()) }}" />
+            <input type="hidden" class="country_code" name="country_code" value="{{ old('country_code', isset($model) ?$model->country_code : base_country_code() )}}" data-reflection="phone">
             @error('responsible_mobile')
                 <div class="invalid-feedback">
                     {{ $message }}

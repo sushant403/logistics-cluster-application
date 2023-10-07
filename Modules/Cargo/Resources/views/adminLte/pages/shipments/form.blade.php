@@ -11,15 +11,22 @@
     $userBranch = Modules\Cargo\Entities\Branch::where('user_id',auth()->user()->id)->first();
     $userStaff  = Modules\Cargo\Entities\Staff::where('user_id',auth()->user()->id)->first();
     $userClient = Modules\Cargo\Entities\Client::where('user_id',auth()->user()->id)->first();
+    $userReciver = Modules\Cargo\Entities\Receiver::where('user_id',auth()->user()->id)->first();
+
+
 
     $branches = Modules\Cargo\Entities\Branch::where('is_archived', 0)->get();
     $clients = Modules\Cargo\Entities\Client::where('is_archived', 0)->get();
+    $Recivers  =  Modules\Cargo\Entities\Receiver::where('is_archived', 0)->get();
     if($user_role == $auth_branch){
         $branches = Modules\Cargo\Entities\Branch::where('id', $userBranch->id)->get();
         $clients  = Modules\Cargo\Entities\Client::where('branch_id', $userBranch->id )->get();
+        $Recivers  = Modules\Cargo\Entities\Receiver::where('branch_id', $userBranch->id )->get();
     }elseif(auth()->user()->can('create-shipments') && $user_role == $auth_staff){
         $branches = Modules\Cargo\Entities\Branch::where('id', $userStaff->branch_id )->get();
         $clients  = Modules\Cargo\Entities\Client::where('branch_id', $userStaff->branch_id )->get();
+        $Recivers  = Modules\Cargo\Entities\Receiver::where('branch_id', $userStaff->branch_id )->get();
+
     }
 
     $countries = Modules\Cargo\Entities\Country::where('covered',1)->get();
@@ -44,93 +51,6 @@
 <div class="card-header">
     <h5 class="mb-0 h6">{{ __('cargo::view.shipment_info') }}</h5>
 </div>
-@if(auth()->user()->can('shipping-rates') || $user_role == $admin )
-    @if( Modules\Cargo\Entities\ShipmentSetting::getVal('def_shipping_cost') == null)
-    <div class="row">
-        <div class="alert alert-danger col-lg-8" style="margin: auto;margin-top:10px;" role="alert">
-            {{ __('cargo::view.please_configure_shipping_rates_in_creation_will_be_zero_without_configuration') }},
-            <a class="alert-link" href="{{ route('shipments.settings.fees') }}">{{ __('cargo::view.configure_now') }}</a>
-        </div>
-    </div>
-    @endif
-@endif
-
-@if(auth()->user()->can('add-covered-countries') || $user_role == $admin )
-    @if(count($countries) == 0 || Modules\Cargo\Entities\State::where('covered', 1)->count() == 0)
-    <div class="row">
-        <div class="alert alert-danger col-lg-8" style="margin: auto;margin-top:10px;" role="alert">
-            {{ __('cargo::view.please_configure_your_covered_countries_and_regions') }},
-            <a class="alert-link" href="{{ route('countries.index') }}">{{ __('cargo::view.configure_now') }}</a>
-        </div>
-    </div>
-    @endif
-@endif
-
-@if(auth()->user()->can('manage-areas') || $user_role == $admin )
-    @if(Modules\Cargo\Entities\Area::count() == 0)
-    <div class="row">
-        <div class="alert alert-danger col-lg-8" style="margin: auto;margin-top:10px;" role="alert">
-            {{ __('cargo::view.please_add_areas_before_creating_your_first_shipment') }},
-            <a class="alert-link" href="{{ route('areas.create') }}">{{ __('cargo::view.configure_now') }}</a>
-        </div>
-    </div>
-    @endif
-@endif
-
-@if(auth()->user()->can('manage-packages') || $user_role == $admin )
-    @if(count($packages) == 0)
-    <div class="row">
-        <div class="alert alert-danger col-lg-8" style="margin: auto;margin-top:10px;" role="alert">
-            {{ __('cargo::view.please_add_package_types_before_creating_your_first_shipment') }},
-            <a class="alert-link" href="{{ route('packages.create') }}">{{ __('cargo::view.configure_now') }}</a>
-        </div>
-    </div>
-    @endif
-@endif
-
-@if(auth()->user()->can('manage-branches') || $user_role == $admin )
-    @if($branches->count() == 0)
-    <div class="row">
-        <div class="alert alert-danger col-lg-8" style="margin: auto;margin-top:10px;" role="alert">
-            {{ __('cargo::view.please_add_branches_types_before_creating_your_first_shipment') }},
-            <a class="alert-link" href="{{ route('branches.create') }}">{{ __('cargo::view.configure_now') }}</a>
-        </div>
-    </div>
-    @endif
-@endif
-
-@if(auth()->user()->can('manage-clients') || $user_role == $admin )
-    @if($clients->count() == 0)
-    <div class="row">
-        <div class="alert alert-danger col-lg-8" style="margin: auto;margin-top:10px;" role="alert">
-            {{ __('cargo::view.please_add_clients_types_before_creating_your_first_shipment') }},
-            <a class="alert-link" href="{{ route('clients.create') }}">{{ __('cargo::view.configure_now') }}</a>
-        </div>
-    </div>
-    @endif
-@endif
-
-@if($user_role == $auth_branch || $user_role == $auth_staff || $user_role == $auth_client )
-    @if( Modules\Cargo\Entities\ShipmentSetting::getVal('def_shipping_cost') == null || count($countries) == 0 || Modules\Cargo\Entities\State::where('covered', 1)->count() == 0 || Modules\Cargo\Entities\Area::count() == 0 || count($packages) == 0 || $branches->count() == 0 || $clients->count() == 0)
-        <div class="row">
-            <div class="text-center alert alert-danger col-lg-8" style="margin: auto;margin-top:10px;" role="alert">
-                {{ __('cargo::view.please_ask_your_administrator_to_configure_shipment_settings_first_before_you_can_create_a_new_shipment') }}
-            </div>
-        </div>
-    @endif
-@endif
-
-<!-- @if(auth()->user()->can('payments-settings') || $user_role == $admin )
-    @if(count($paymentSettings) == 0)
-    <div class="row">
-        <div class="alert alert-danger col-lg-8" style="margin: auto;margin-top:10px;" role="alert">
-            {{ __('cargo::view.please_add_payments_before_creating_your_first_shipment') }},
-            <a class="alert-link" href="{{ route('payments.index') }}">{{ __('cargo::view.configure_now') }}</a>
-        </div>
-    </div>
-    @endif
-@endif -->
-
 
 <div class="row">
     <div class="col-lg-12">
@@ -308,15 +228,15 @@
 
                     @if($user_role == $auth_client)
                         @if($typeForm == 'create')
-                            <input type="tel" name="Shipment[client_phone]" placeholder="{{ __('cargo::view.client_phone') }}"  id="client_phone" value="{{$userClient->country_code.$userClient->responsible_mobile}}" class="phone_input phone_input_1  number-only form-control @error('Shipment.client_phone') is-invalid @enderror" />
-                            <input type="hidden" class="country_code country_code_1" name="Shipment[country_code]" value="{{$userClient->country_code ?? '+1'}}" data-reflection="phone">
+                            <input type="tel" name="Shipment[client_phone]" placeholder="{{ __('cargo::view.client_phone') }}"  id="client_phone" value="{{$userClient->country_code.($userClient->responsible_mobile ??  base_country_code())}}" class="phone_input phone_input_1  number-only form-control @error('Shipment.client_phone') is-invalid @enderror" />
+                            <input type="hidden" class="country_code country_code_1" name="Shipment[country_code]" value="{{$userClient->country_code ?? base_country_code()}}" data-reflection="phone">
                         @elseif($typeForm == 'edit')
-                            <input type="tel" name="Shipment[client_phone]" placeholder="{{ __('cargo::view.client_phone') }}"  id="client_phone" value="{{ old('Shipment.client_phone', isset($model) ? $model->country_code.$model->client_phone : '' ) }}" class="phone_input phone_input_1  number-only  form-control @error('Shipment.client_phone') is-invalid @enderror" />
-                            <input type="hidden" class="country_code country_code_1" id="country_code" name="Shipment[country_code]" value="{{ old('country_code', isset($model) ? $model->country_code : '+1') }}" data-reflection="phone">
+                            <input type="tel" name="Shipment[client_phone]" placeholder="{{ __('cargo::view.client_phone') }}"  id="client_phone" value="{{ old('Shipment.client_phone', isset($model) ? $model->country_code.$model->client_phone :  base_country_code() ) }}" class="phone_input phone_input_1  number-only  form-control @error('Shipment.client_phone') is-invalid @enderror" />
+                            <input type="hidden" class="country_code country_code_1" id="country_code" name="Shipment[country_code]" value="{{ old('country_code', isset($model) ? $model->country_code :  base_country_code()) }}" data-reflection="phone">
                         @endif
                     @else
-                        <input type="tel" name="Shipment[client_phone]" placeholder="{{ __('cargo::view.client_phone') }}"  id="client_phone" value="{{ old('Shipment.client_phone', isset($model) ? $model->country_code.$model->client_phone : '' ) }}" class="phone_input phone_input_1  number-only  form-control @error('Shipment.client_phone') is-invalid @enderror" />
-                        <input type="hidden" class="country_code country_code_1" id="country_code" name="Shipment[country_code]" value="{{ old('country_code', isset($model) ? $model->country_code : '+1') }}" data-reflection="phone">
+                        <input type="tel" name="Shipment[client_phone]" placeholder="{{ __('cargo::view.client_phone') }}"  id="client_phone" value="{{ old('Shipment.client_phone', isset($model) ? $model->country_code.$model->client_phone :  base_country_code() ) }}" class="phone_input phone_input_1  number-only  form-control @error('Shipment.client_phone') is-invalid @enderror" />
+                        <input type="hidden" class="country_code country_code_1" id="country_code" name="Shipment[country_code]" value="{{ old('country_code', isset($model) ? $model->country_code :  base_country_code()) }}" data-reflection="phone">
                     @endif
 
                     @error('Shipment.client_phone')
@@ -430,33 +350,76 @@
                 </div>
             </div>
 
+
             <div class="col-md-6">
-                <div class="form-group">
+                <div class="form-group client-select">
                     <label class="col-form-label fw-bold fs-6 required">{{ __('cargo::view.receiver_name') }}</label>
-                    <input type="text" value="{{ old('Shipment.reciver_name', isset($model) ? $model->reciver_name : '') }}" placeholder="{{ __('cargo::view.receiver_name') }}" name="Shipment[reciver_name]" class="form-control @error('Shipment.reciver_name') is-invalid @enderror" />
-                    @error('Shipment.reciver_name')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
+                    @if($user_role == $auth_client)
+                        <input type="text" placeholder="" class="form-control" name="" value="{{$userReciver->name}}" disabled>
+                        <input type="hidden" name="Shipment[reciver_name]" value="{{$userReciver->name}}">
+                    @else
+                        <select
+                            id="reciver-id" 
+                            class="form-control select-reciver  @error('Shipment.reciver_name') is-invalid @enderror"
+                            data-control="select2"
+                            data-placeholder="{{ __('cargo::view.choose_client') }}"
+                            data-allow-clear="true"
+                            name="Shipment[reciver_name]"
+                        >
+                            <option></option>
+                            @foreach($Recivers as $client)
+                                <option
+                                    value="{{$client->name}}"
+                                    data-phone="{{$client->receiver_mobile}}"
+                                    data-country="{{$client->country_code}}"
+                                    data-address="{{$client->reciver_address}}"
+                                    {{ old('Shipment.reciver_name') == $client->name ? 'selected' : '' }}
+                                    @if($typeForm == 'edit')
+                                        {{ $model->reciver_name == $client->name ? 'selected' : '' }}
+                                    @endif
+                                > {{$client->name}}</option>
+                            @endforeach
+                        </select>
+                        @error('Shipment.reciver_name')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    @endif
+
                 </div>
             </div>
+
             <div class="col-md-6">
                 <div class="form-group">
-                    <label class="col-form-label fw-bold fs-6 required" style=" display: block; " >{{ __('cargo::view.receiver_phone') }}</label>
-                    <input type="tel" value="{{ old('Shipment.reciver_phone', isset($model) ?$model->follow_up_country_code.$model->reciver_phone : '') }}" placeholder="{{ __('cargo::view.receiver_phone') }}" dir="ltr" autocomplete="off" required   name="Shipment[reciver_phone]" class="phone_input phone_input_2 number-onl form-control @error('Shipment.reciver_phone') is-invalid @enderror"  id="phone" />
-                    <input type="hidden" class="country_code  country_code_2 " name=" Shipment[follow_up_country_code]" value="{{ old('Shipment.follow_up_country_code', isset($model) ?$model->follow_up_country_code : '993') }}" data-reflection="phone"> 
+                    <label class="col-form-label fw-bold fs-6 required" style=" display: block; ">{{ __('cargo::view.receiver_phone') }}</label>
+
+                    @if($user_role == $auth_client)
+                        @if($typeForm == 'create')
+                            <input type="tel" name="Shipment[reciver_phone]" placeholder="{{ __('cargo::view.reciver_phone') }}"  id="reciver_phone" value="{{$userReciver->country_code.($userReciver->responsible_mobile ??  base_country_code())}}" class="phone_input phone_input_2  number-only form-control @error('Shipment.reciver_phone') is-invalid @enderror" />
+                            <input type="hidden" class="country_code country_code_2" name="Shipment[country_code]" value="{{$userReciver->country_code ?? base_country_code()}}" data-reflection="phone">
+                        @elseif($typeForm == 'edit')
+                            <input type="tel" name="Shipment[reciver_phone]" placeholder="{{ __('cargo::view.reciver_phone') }}"  id="reciver_phone" value="{{ old('Shipment.reciver_phone', isset($model) ? $model->country_code.$model->reciver_phone :  base_country_code() ) }}" class="phone_input phone_input_2  number-only  form-control @error('Shipment.reciver_phone') is-invalid @enderror" />
+                            <input type="hidden" class="country_code country_code_2" id="country_code" name="Shipment[country_code]" value="{{ old('country_code', isset($model) ? $model->country_code :  base_country_code()) }}" data-reflection="phone">
+                        @endif
+                    @else
+                        <input type="tel" name="Shipment[reciver_phone]" placeholder="{{ __('cargo::view.reciver_phone') }}"  id="reciver_phone" value="{{ old('Shipment.reciver_phone', isset($model) ? $model->country_code.$model->reciver_phone :  base_country_code() ) }}" class="phone_input phone_input_2  number-only  form-control @error('Shipment.reciver_phone') is-invalid @enderror" />
+                        <input type="hidden" class="country_code country_code_2" id="country_code" name="Shipment[country_code]" value="{{ old('country_code', isset($model) ? $model->country_code :  base_country_code()) }}" data-reflection="phone">
+                    @endif
+
                     @error('Shipment.reciver_phone')
                         <div class="invalid-feedback">
                             {{ $message }}
                         </div>
                     @enderror
+
                 </div>
             </div>
+
             <div class="col-md-12">
                 <div class="form-group">
                     <label class="col-form-label fw-bold fs-6 required">{{ __('cargo::view.receiver_address') }}</label>
-                    <input type="text" value="{{ old('Shipment.reciver_address', isset($model) ? $model->reciver_address : '') }}" placeholder="{{ __('cargo::view.receiver_address') }}" name="Shipment[reciver_address]" class="form-control @error('Shipment.reciver_address') is-invalid @enderror" />
+                    <input type="text"  id="reciver_address"   value="{{ old('Shipment.reciver_address', isset($model) ? $model->reciver_address : '') }}" placeholder="{{ __('cargo::view.receiver_address') }}" name="Shipment[reciver_address]" class="form-control @error('Shipment.reciver_address') is-invalid @enderror  address" data-reflection="address"/>
                     @error('Shipment.reciver_address')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -464,6 +427,9 @@
                     @enderror
                 </div>
             </div>
+
+
+
 
             @if($googleMap)
                 <div class="col-md-12">
@@ -904,7 +870,7 @@
                 <hr>
             @endif
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-6">
                     <div class="form-group">
                         <label class="col-form-label fw-bold fs-6">{{ __('cargo::view.amount_to_be_collected') }}</label>
                         <input id="kt_touchspin_3" placeholder="{{ __('cargo::view.amount_to_be_collected') }}" type="number" min="0" class="form-control @error('Shipment.amount_to_be_collected') is-invalid @enderror" value="{{ old('Shipment.amount_to_be_collected', isset($model) ? $model->amount_to_be_collected : 0 ) }}" name="Shipment[amount_to_be_collected]" />
@@ -915,8 +881,21 @@
                         @enderror
                     </div>
                 </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="col-form-label fw-bold fs-6 required">{{ __('cargo::view.total_weight') }}</label>
+                        <input id="kt_touchspin_4" placeholder="{{ __('cargo::view.total_weight') }}" type="text" min="0.5" value="{{ old('Shipment.total_weight', isset($model) ? $model->total_weight : 0.5 ) }}" class="form-control total-weight kt_touchspin_weight @error('Shipment.total_weight') is-invalid @enderror" name="Shipment[total_weight]" />
+                        @error('Shipment.total_weight')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                </div>
             </div>
 
+            </div>
+            {{--
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
@@ -937,22 +916,9 @@
                             </div>
                         @enderror
                     </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label class="col-form-label fw-bold fs-6 required">{{ __('cargo::view.total_weight') }}</label>
-                        <input id="kt_touchspin_4" placeholder="{{ __('cargo::view.total_weight') }}" type="text" min="0.5" value="{{ old('Shipment.total_weight', isset($model) ? $model->total_weight : 0.5 ) }}" class="form-control total-weight kt_touchspin_weight @error('Shipment.total_weight') is-invalid @enderror" name="Shipment[total_weight]" />
-                        @error('Shipment.total_weight')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-                </div>
+                </div> 
             </div>
-
-        </div>
-
+            --}}
         <div class="mb-0 text-right form-group">
 
             <!-- Button trigger modal -->
@@ -1193,6 +1159,14 @@
                     </li>`);
             });
         @endif
+        // IF Clients Select Not Have Clients
+        @if( $user_role == $admin || $user_role == $auth_branch)
+            $('.select-reciver').select2().on('select2:open', () => {
+                $(".select2-results:not(:has(a))").append(`<li style='list-style: none; padding: 10px;'><a style="width: 100%" href="{{route('receivers.create')}}?redirect=shipments.create"
+                    class="btn btn-primary" >+ {{ __('cargo::view.create_new_receiver') }}</a>
+                    </li>`);
+            });
+        @endif
 
         // IF Payments Select Not Have Clients
         @if(auth()->user()->can('payments-settings') || $user_role == $admin)
@@ -1213,6 +1187,17 @@
             $("#country_code").val(client_country_code);
 
         })
+        // Set Client Phone After Select Client
+        $('.select-reciver').change(function(){
+            var client_phone = $(this).find(':selected').data('phone');
+            var client_country_code = $(this).find(':selected').data('country');
+            var client_reciver_address = $(this).find(':selected').data('address');
+
+            $("#reciver_phone").val(client_phone);  
+            $("#country_code").val(client_country_code);
+            $("#reciver_address").val(client_reciver_address);
+
+        })
 
         // Get Client Id
         function selectIdTriggered()
@@ -1223,7 +1208,7 @@
         $('.select-address').select2({
             placeholder: "{{ __('cargo::view.choose_client_first') }}",
         })
-
+        
         // Ajax Get Client Addresses By Id
         function getClientAddresses(client_id)
         {
@@ -1762,10 +1747,17 @@
                 let iti = window.intlTelInput(input, {
                     separateDialCode: true,
                     utilsScript: window.static_asset_utils_file,
-                    initialCountry: "US",
+                    initialCountry: "ng",
                     preferredCountries: ["eg","ng","ke"],
                     autoPlaceholder: "aggressive"
                 });
+                 // Set Client Phone After Select Client
+                $('.select-client').change(function(){
+                    var client_phone = $(this).find(':selected').data('phone');
+                    var client_country_code = $(this).find(':selected').data('country');
+                        // Change the country code
+                    iti.setNumber(client_country_code + client_phone)
+                })
                 input.addEventListener("countrychange", function() {
                     $('.phone_input_1').filter(`[data-reflection="${type}"]`).val(iti.getSelectedCountryData().dialCode);
                     $('.country_code_1').val('+'+iti.getSelectedCountryData().dialCode);
@@ -1833,10 +1825,18 @@
                 let iti = window.intlTelInput(input, {
                     separateDialCode: true,
                     utilsScript: window.static_asset_utils_file,
-                    initialCountry: "US",
+                    initialCountry: "ng",
                     preferredCountries: ["eg","ng","ke"],
                     autoPlaceholder: "aggressive"
                 });
+                // Set Reciver Phone After Select Client
+                $('.select-reciver').change(function(){
+                    var client_phone = $(this).find(':selected').data('phone');
+                    var client_country_code = $(this).find(':selected').data('country');
+
+                     // Change the country code
+                    iti.setNumber(client_country_code + client_phone)
+                })
                 input.addEventListener("countrychange", function() {
                     $('.phone_input_2').filter(`[data-reflection="${type}"]`).val(iti.getSelectedCountryData().dialCode);
                     $('.country_code_2').val('+'+iti.getSelectedCountryData().dialCode);
@@ -1891,5 +1891,9 @@
                 }
             });
         });
+
+
+        $('.address').filter(`[data-reflection="${type}"]`).val(iti.getSelectedCountryData().dialCode);
+
     </script>
 @endpush

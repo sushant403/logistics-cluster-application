@@ -35,7 +35,7 @@ class BlogServiceProvider extends ServiceProvider
         app('hook')->set('aside_menu', $aside_menu, 'array');
 
         $aside_menu_settings = view('blog::'.$adminTheme.'.components.aside_menu_settings');
-        app('hook')->set('aside_menu_settings', $aside_menu_settings, 'array');
+        // app('hook')->set('aside_menu_settings', $aside_menu_settings, 'array');
 
         $select_category_menu_components = view('blog::'.$adminTheme.'.components.select_category_to_menu');
         $select_post_menu_components = view('blog::'.$adminTheme.'.components.select_post_to_menu');

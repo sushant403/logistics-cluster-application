@@ -18,6 +18,79 @@ use App\Models\ThemeSettingContainer;
 use Modules\Cargo\Entities\BusinessSetting;
 use Modules\Currency\Entities\Currency;
 
+
+if (!function_exists('is_app_installed')) {
+    /**
+     * Check if app is installed
+     *
+     * @return boolean
+     */
+    function is_app_installed($hardcheck = false) {
+        $soft = 1 === abs(intval(env('INSTALLATION')));
+
+        $hard = $soft
+            && \Illuminate\Support\Facades\Schema::hasTable('settings')
+            && check_module('localization');
+
+        return true === $hardcheck ? $hard : $soft;
+    }
+}
+
+
+if (!function_exists('get_base_url')) {
+    /**
+     * Get base url
+     *
+     * @return string
+     */
+    function get_base_url() {
+        $hasPort = (
+            isset($_SERVER['SERVER_PORT'])
+            && false === empty($_SERVER['SERVER_PORT'])
+            && '80' !== $_SERVER['SERVER_PORT']
+            && '443' !== $_SERVER['SERVER_PORT']
+        );
+
+        $port = true === $hasPort
+            ? ":{$_SERVER['SERVER_PORT']}"
+            : '';
+
+        return sprintf(
+            "%s://%s%s",
+            isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http',
+            $_SERVER['SERVER_NAME'],
+            $port
+        );
+    }
+}
+
+
+if (!function_exists('get_locale_name_by_code')) {
+    /**
+     * Get locale name by code
+     *
+     * @param string $code
+     * @return string
+     */
+    function get_locale_name_by_code($code, $default = null) {
+        $locales = collect(
+            config('localization.languages', [])
+        );
+
+        $locale = $locales->filter(function($item, $idx) use ($code) {
+            return strtolower($idx) === strtolower($code)
+                || strtolower($item['name']) === strtolower($code);
+        })->first();
+
+        $locale = collect($locale)->get('name', $default);
+
+        return false === empty($locale)
+            ? $locale
+            : $default;
+    }
+}
+
+
 /***********************************************************************************/
 if (!function_exists('check_module')) {
     /**
@@ -52,7 +125,7 @@ if (!function_exists('get_module_settings')) {
         $general_settings = $get_setting->first(function ($setting) { return $setting->module_slug == 'general_settings'; });
 
         if ($general_settings) $module_settings[] = $general_settings;
-        
+
         foreach ($get_setting as $setting) {
             if ($setting->module_slug != 'general_settings') {
                 $module_settings[] = $setting;
@@ -73,7 +146,7 @@ if (!function_exists('get_general_setting')) {
         if (env('INSTALLATION') == 'true' && \Illuminate\Support\Facades\Schema::hasTable('settings'))
         {
             $settings = app(\App\Models\GeneralSettings::class);
-            
+
             $value = null;
             $old_setting = config('cms.settings.general');
             $get_setting_fields = \App\Models\GeneralSettings::fields();
@@ -87,7 +160,7 @@ if (!function_exists('get_general_setting')) {
                         $value = (is_array($get_setting_fields[$key]['value'])) ? (isset($get_setting_fields[$key]['value'][LaravelLocalization::getCurrentLocale()]) ? $get_setting_fields[$key]['value'][LaravelLocalization::getCurrentLocale()] : $get_setting_fields[$key]['value']['en'] ) : $get_setting_fields[$key]['value'];
                     }
                 }
-                
+
                 config()->set('cms.settings.general', collect($get_setting_fields)->toArray());
             }
             return $value ?? $default;
@@ -233,11 +306,11 @@ if (!function_exists('breadcrumb')) {
      * set and get breadcrumb in view pages
      * save and get array breadcrumb in config cms file
      *
-     * @param array||null  $breadcrumb 
+     * @param array||null  $breadcrumb
      * [
             [
                 'name' => Name previous page,
-                'path' => fr_route path 
+                'path' => fr_route path
             ],
             [
                 'name' => name current page
@@ -245,11 +318,11 @@ if (!function_exists('breadcrumb')) {
         ]
      * @param boolean  $merge
      * if true will be merge $breadcrumb array with array in config
-     * @return array 
+     * @return array
      * if @param $breadcrumb is null will be get config breadcrumb
      * if @param $breadcrumb is array will be set config breadcrumb
-     * 
-     * @example 
+     *
+     * @example
      *  breadcrumb([
             [
                 'name' => 'Home',
@@ -289,7 +362,7 @@ if (!function_exists('breadcrumb_html')) {
         if (is_array($breadcrumb) && !empty($breadcrumb)) {
             $resultHTML = '';
             $lastPage = $breadcrumb[count($breadcrumb) - 1];
-            
+
             $adminTheme = env('ADMIN_THEME', 'adminLte');
             if($adminTheme == 'admin'){
                 $resultHTML .= ('<h1 class="d-flex align-items-center text-dark fw-bolder fs-3 my-1">' . $lastPage['name'] . '</h1>');
@@ -299,7 +372,7 @@ if (!function_exists('breadcrumb_html')) {
                         if (isset($page['path'])) {
                             $path = str::startsWith($page['path'], 'http') ? $page['path'] : aurl($page['path']);
                             $resultHTML .= (
-                                '<li class="breadcrumb-item pe-3">' . 
+                                '<li class="breadcrumb-item pe-3">' .
                                     '<a href="' . $path . '" class="pe-3">' . $page['name'] . '</a>' .
                                 '</li>'
                             );
@@ -319,7 +392,7 @@ if (!function_exists('breadcrumb_html')) {
                         if (isset($page['path'])) {
                             $path = str::startsWith($page['path'], 'http') ? $page['path'] : aurl($page['path']);
                             $resultHTML .= (
-                                '<li class="breadcrumb-item">' . 
+                                '<li class="breadcrumb-item">' .
                                     '<a href="' . $path . '" class="pe-3">' . $page['name'] . '</a>' .
                                 '</li>'
                             );
@@ -347,7 +420,7 @@ if (!function_exists('convert_base64_to_file')) {
     function convert_base64_to_file($base64) {
         // decode the base64 file
         $str_cut = ';base64,';
-        $base64_string = substr($base64, strpos($base64, $str_cut) + strlen($str_cut));        
+        $base64_string = substr($base64, strpos($base64, $str_cut) + strlen($str_cut));
         $fileData = base64_decode($base64_string);
         // save it to temporary dir first.
         $tmpFilePath = sys_get_temp_dir() . '/' . Str::uuid()->toString();
@@ -389,7 +462,7 @@ if (!function_exists('check_every_array')) {
      * $small_array = ['a', 'b', 'c', 'd'];
      * $big_array = ['b', 'c', 'a', 'e', 'f', 'd'];
      * check_every_array($small_array, $big_array) // ture
-     * 
+     *
      * $small_array = ['a', 'b', 'z', 'd'];
      * $big_array = ['b', 'c', 'a', 'e', 'f', 'd'];
      * check_every_array($small_array, $big_array) // false
@@ -594,10 +667,10 @@ if (!function_exists('get_list_of_header_menu')) {
         if (check_module('Localization')) {
             $current_lang = Modules\Localization\Entities\Language::where('code', LaravelLocalization::getCurrentLocale())->first();
         }
-        
+
         $menu_items_html = '';
         $header_setting = theme_setting('header.header');
-        
+
         if(!$header_setting) $header_setting = array();
             $style = (array_key_exists('header_text_color', $header_setting) && $header_setting['header_text_color']) ? "color: ".$header_setting['header_text_color'] : "";
             $lang = $current_lang ? $current_lang->code : 'en';
@@ -620,7 +693,7 @@ if (!function_exists('get_list_of_header_menu')) {
             }
         return $menu_items_html;
     }
-}        
+}
 /***********************************************************************************/
 
 if (!function_exists('get_setting')) {
@@ -839,7 +912,7 @@ if (!function_exists('get_notification_users')) {
             if(isset(json_decode($settings->{$name}, true)[$name.'_branches'])) {
                 $users[]  = json_decode($settings->{$name}, true)[$name.'_branches'];
             }
-            
+
             $users = array_merge(...$users);
 
             if($model){
@@ -867,7 +940,7 @@ if (!function_exists('get_notification_gateways')) {
         $gateways = array();
         if (env('INSTALLATION') == 'true' && \Illuminate\Support\Facades\Schema::hasTable('settings')) {
             $settings = app(App\Models\NotificationsSettings::class);
-            
+
             if($settings->email){
                 $gateways[] = 'mail';
             }
@@ -876,6 +949,9 @@ if (!function_exists('get_notification_gateways')) {
             }
             if($settings->fcm){
                 $gateways[] = 'fcm';
+            }
+            if($settings->whatsapp){
+                $gateways[] = 'whatsapp';
             }
         }
         $gateways[] = 'database';
@@ -890,7 +966,7 @@ if (!function_exists('send_notification')) {
      */
     function send_notification($user,$gateways,$type, $title = null, $content = null, $url = null, $model= null) {
         $available_gateways = $gateways;
-               
+
         if($user){
           $phone = '';
             $user_role = $user->role;
@@ -898,31 +974,43 @@ if (!function_exists('send_notification')) {
             {
                 if($user_role == 3){ // User Branch
                     $phone = Modules\Cargo\Entities\Branch::where('user_id',$user->id)->pluck('responsible_mobile')->first();
+                    $country_code = Modules\Cargo\Entities\Branch::where('user_id',$user->id)->pluck('country_code')->first();
                 }elseif($user_role == 4){ // User Client
                     $phone = Modules\Cargo\Entities\Client::where('user_id',$user->id)->pluck('responsible_mobile')->first();
+                    $country_code = Modules\Cargo\Entities\Client::where('user_id',$user->id)->pluck('country_code')->first();
                 }elseif($user_role == 0){ // User Staff
                     $phone = Modules\Cargo\Entities\Staff::where('user_id',$user->id)->pluck('responsible_mobile')->first();
+                    $country_code = Modules\Cargo\Entities\Staff::where('user_id',$user->id)->pluck('country_code')->first();
                 }elseif($user_role == 5){ // User Driver
                     $phone = Modules\Cargo\Entities\Driver::where('user_id',$user->id)->pluck('responsible_mobile')->first();
+                    $country_code = Modules\Cargo\Entities\Driver::where('user_id',$user->id)->pluck('country_code')->first();
                 }
             }
-         
+
             if(isset($phone) && $phone == null){
                 if (($key = array_search('sms', $available_gateways)) !== false) {
                     unset($available_gateways[$key]);
                 }
             }
-          
-            
+
+
             if(isset($user->email) && $user->email == null){
                 if (($key = array_search('email', $available_gateways)) !== false) {
                     unset($available_gateways[$key]);
                 }
             }
+
+            if(isset($phone) && $phone == null){
+                if (($key = array_search('whatsapp', $available_gateways)) !== false) {
+                    unset($available_gateways[$key]);
+                }
+            }
+
             $data = array(
                 'sender'    =>  $user->id,
                 'to'        =>  $user->device_token ?? " ",
                 'phone'     =>  $phone ?? " ",
+                'country_code'     =>   $country_code ?? " ",
                 'message'   =>  array(
                         'subject'   =>  ($title ?? " ").(' | #'.$model->code ?? " "),
                         'content'   =>  $content ?? " ",
@@ -934,33 +1022,45 @@ if (!function_exists('send_notification')) {
                 'icon'      =>  'fas fa-bell',
                 'type'      =>  $type ?? " ",
             );
-            
+
             $user->notify(new \App\Notifications\GlobalNotification($data, $available_gateways));
         }
     }
 }
 
-if (!function_exists('setEnvValue')) {
+
+if (!function_exists('update_env_value')) {
     /**
      * set in .env file
      * @return array
      */
-    function setEnvValue(string $key, string $value)
-    {
+    function update_env_value(string $key, $value) {
         $path = app()->environmentFilePath();
-        $env = file_get_contents($path);
+        $oldValue = env($key);
 
-        $old_value = env($key);
-
-        if (!str_contains($env, $key.'=')) {
-            $env .= sprintf("%s=%s\n", $key, $value);
-        } else if ($old_value) {
-            $env = str_replace(sprintf('%s=%s', $key, $old_value), sprintf('%s=%s', $key, $value), $env);
-        } else {
-            $env = str_replace(sprintf('%s=', $key), sprintf('%s=%s',$key, $value), $env);
+        if ($oldValue === $value) {
+            return;
         }
 
-        file_put_contents($path, $env);
+        $fileContent = file_get_contents($path);
+
+        if (!str_contains($fileContent, $key . '=')) {
+            $fileContent .= sprintf("%s=%s\n", $key, $value);
+        } elseif ($oldValue) {
+            $fileContent = str_replace(
+                sprintf('%s=%s', $key, $oldValue),
+                sprintf('%s=%s', $key, $value),
+                $fileContent
+            );
+        } else {
+            $fileContent = str_replace(
+                sprintf('%s=', $key),
+                sprintf('%s=%s',$key, $value),
+                $fileContent
+            );
+        }
+
+        file_put_contents($path, $fileContent);
     }
 }
 
@@ -984,5 +1084,13 @@ if (! function_exists('get_string_between')) {
         $ini += strlen($start);
         $len = strpos($string, $end, $ini) - $ini;
         return substr($string, $ini, $len);
+    }
+}
+
+if (! function_exists('base_country_code')) {
+    function base_country_code(){
+        $base_country_code = App\Models\Settings::where('name', 'base_country_code')->first()->payload;
+        $number = str_replace('"', '', $base_country_code);
+        return '+' . $number;
     }
 }
