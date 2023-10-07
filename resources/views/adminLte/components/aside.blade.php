@@ -148,6 +148,18 @@
                                 </a>
                             </li>
                         @endcan
+
+                        @if (auth()->user()->can('update-system') || auth()->user()->role == 1)
+                            <li class="nav-item">
+                                <a href="{{ fr_route('backup.database') }}"
+                                    class="nav-link {{ active_route('backup.database') }}  {{ areActiveRoutes(['backup.database']) }}">
+                                    <i class="fa-brands fa-ubuntu fa-fw"></i>
+                                    <p>
+                                        @lang('view.backup_database')
+                                    </p>
+                                </a>
+                            </li>
+                        @endif
                     </ul>
 
                 </li>

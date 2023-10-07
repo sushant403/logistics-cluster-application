@@ -1,11 +1,11 @@
 {
     "Users": true,
-    "Acl": false,
-    "Blog": false,
+    "Acl": true,
+    "Blog": true,
     "Localization": true,
-    "Menu": false,
-    "Widget": false,
-    "Pages": false,
+    "Menu": true,
+    "Widget": true,
+    "Pages": true,
     "Cargo": true,
     "Payments": true,
     "Currency": true
