@@ -477,7 +477,7 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="track-title">
-                                                <label>اسم جهة الاتصال<br> <b>{{$model->reciver_name}}</b></label>
+                                                <label>Receiver Name<br> <b>{{$model->reciver_name}}</b></label>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
