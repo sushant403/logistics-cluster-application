@@ -1163,7 +1163,7 @@
                 }
             }
         });
-        Modules\Cargo\Resources\views\adminLte\pages\shipments\shipment-calculator.blade.php
+        // Modules\Cargo\Resources\views\adminLte\pages\shipments\shipment-calculator.blade.php
         function clientAddress() {
             var client_address = $('#client_address').val().length;
             

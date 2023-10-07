@@ -42,50 +42,50 @@ $('#main-header').on('mouseleave', e => {
 });
 
 // carousel
-$(document).ready(function () {
-  $('.app-carousel').slick({
-    // mobileFirst: true,
-    autoplay: true,
-    dots: true,
-    arrows: false,
-    autoplaySpeed: 4000,
-    centerPadding: '15px',
-    centerMode: false,
+// $(document).ready(function () {
+//   $('.app-carousel').slick({
+//     // mobileFirst: true,
+//     autoplay: true,
+//     dots: true,
+//     arrows: false,
+//     autoplaySpeed: 4000,
+//     centerPadding: '15px',
+//     centerMode: false,
 
-    slidesToShow: 3,
-    slidesToScroll: 3,
-    responsive: [
-      {
-        breakpoint: 991,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-          infinite: true,
-          dots: true,
-        },
-      },
-      {
-        breakpoint: 767,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-    ],
-  });
-});
+//     slidesToShow: 3,
+//     slidesToScroll: 3,
+//     responsive: [
+//       {
+//         breakpoint: 991,
+//         settings: {
+//           slidesToShow: 2,
+//           slidesToScroll: 2,
+//           infinite: true,
+//           dots: true,
+//         },
+//       },
+//       {
+//         breakpoint: 767,
+//         settings: {
+//           slidesToShow: 1,
+//           slidesToScroll: 1,
+//         },
+//       },
+//     ],
+//   });
+// });
 
-$('.links-carousel').slick({
-  autoplay: true,
-  fade: true,
-  dots: true,
-  arrows: false,
-  responsive: [
-    {
-      breakpoint: 767,
-      settings: {
-        dots: false,
-      },
-    },
-  ],
-});
+// $('.links-carousel').slick({
+//   autoplay: true,
+//   fade: true,
+//   dots: true,
+//   arrows: false,
+//   responsive: [
+//     {
+//       breakpoint: 767,
+//       settings: {
+//         dots: false,
+//       },
+//     },
+//   ],
+// });
