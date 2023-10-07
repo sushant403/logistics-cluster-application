@@ -950,9 +950,9 @@ if (!function_exists('get_notification_gateways')) {
             if($settings->fcm){
                 $gateways[] = 'fcm';
             }
-            if($settings->whatsapp){
-                $gateways[] = 'whatsapp';
-            }
+            // if($settings->whatsapp){
+            //     $gateways[] = 'whatsapp';
+            // }
         }
         $gateways[] = 'database';
         return $gateways;
