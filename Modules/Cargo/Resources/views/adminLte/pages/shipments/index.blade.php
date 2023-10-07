@@ -13,6 +13,12 @@
 
 @section('content')
 
+    <style>
+        .form-check.form-check-custom.form-check-sm .form-check-input {
+            background-color: #009ef7;
+        }
+    </style>
+
     <!--begin::Card-->
     <div class="card">
         <!--begin::Card header-->
