@@ -438,14 +438,14 @@
                                             <div class="chbs-form-field">
                                                 <div class="error" id="error_pickup">{{ __('cargo::view.enter_valid_pickup_location') }}</div>
                                                 <label>{{ __('cargo::view.pickup_location') }}</label>
-                                                <input class="pickup-location" id="from_places" autocomplete="off" placeholder="{{ __('cargo::view.enter_location') }}"/>
+                                                <input class="pickup-location" id="from_places" autocomplete="off" list="autocompleteOff" placeholder="{{ __('cargo::view.enter_location') }}"/>
                                                 <input id="origin" name="origin" type="hidden"/>
                                             </div>
 
                                             <div class="chbs-form-field">
                                                 <div class="error" id="error_drop_off">{{ __('cargo::view.enter_valid_dropoff_location') }}</div>
                                                 <label>{{ __('cargo::view.dropoff_location') }}</label>
-                                                <input class="drop-off-location" id="to_places" autocomplete="off" placeholder="{{ __('cargo::view.enter_location') }}"/>
+                                                <input class="drop-off-location" id="to_places" autocomplete="off" list="autocompleteOff" placeholder="{{ __('cargo::view.enter_location') }}"/>
                                                 <input id="destination" name="destination" type="hidden"/>
                                             </div>
 
